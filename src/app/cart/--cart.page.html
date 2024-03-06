@@ -1,0 +1,211 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>CART</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="cart.length">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="8">
+          <ion-button
+            expand="full"
+            color="tertiary"
+            (click)="goToCheckout()"
+            [disabled]="!isOrderEnabled"
+          >
+            Process To Checkout
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button expand="full" color="danger" (click)="clearCart()">
+            Clear
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="offerButtonText">
+        <ion-col size="12">
+          <ion-button
+            expand="full"
+            class="add-or-update-offer"
+            (click)="openOfferModal()"
+          >
+            {{ offerButtonText }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card color="danger" *ngIf="!isOrderEnabled">
+      <ion-card-header>
+        <ion-card-subtitle class="restaurant-closed">
+          {{ shopClosedMessage }}
+        </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card
+      *ngFor="let item of cart; let i = index"
+      [class.even]="i % 2 === 0"
+      [class.odd]="i % 2 !== 0"
+    >
+      <!-- <pre>{{ item | json }}</pre> -->
+      <ion-card-content>
+        <ion-grid *ngIf="!item.isDeals; else dealsBlock">
+          <ion-row *ngIf="item.isAvailable" class="item-block">
+            <ion-col size="3">
+              <ion-icon
+                *ngIf="!item.isFree"
+                name="remove"
+                class="minus-icon"
+                (click)="decreaseQuantity(i)"
+              ></ion-icon>
+              &nbsp;
+              <ion-icon
+                *ngIf="!item.isFree"
+                name="add"
+                class="plus-icon"
+                (click)="increaseQuantity(i)"
+              ></ion-icon>
+            </ion-col>
+            <ion-col size="6" class="ion-text-justified item-text">
+              {{ item.quantity }}&nbsp;X &nbsp;{{ item.item.name }}
+              <br />
+              {{ item.item.printedDescription }}
+              <span *ngIf="item.isFree">(Free)</span>
+            </ion-col>
+            <ion-col size="3" class="ion-text-end item-price">
+              <ng-container
+                *ngIf="item.hasOwnProperty('buy_get_amount'); then withBuyGetBlock
+            else withoutBuyGetBlock"
+              >
+              </ng-container>
+              <ng-template #withBuyGetBlock>
+                <span>
+                  {{ (item.quantity * item.item.price) - item.buy_get_amount |
+                  productPrice }}
+                </span>
+              </ng-template>
+              <ng-template #withoutBuyGetBlock>
+                <span>
+                  {{ (item.quantity * item.item.price) | productPrice }}
+                </span>
+              </ng-template>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="!item.isAvailable" class="item-block">
+            <ion-col size="3" class="ion-text-start">
+              <ion-icon
+                name="close"
+                class="remove-icon"
+                (click)="removeItem(i)"
+              ></ion-icon>
+            </ion-col>
+            <ion-col size="6" class="ion-text-start item-text">
+              {{ item.quantity }}&nbsp;X &nbsp;{{ item.item.name }}
+            </ion-col>
+            <ion-col size="3" class="ion-text-end item-price">
+              {{ item.quantity * item.item.price | productPrice }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="item-option">
+            <ion-col size="12">
+              <p *ngIf="item.item.optionsString">
+                {{ item.item.optionsString }}
+              </p>
+              <p *ngIf="item.free_item_qty > 0">
+                You Have Got {{ item.free_item_qty }} Items Free
+              </p>
+              <p *ngIf="item.item.comment">{{ item.item.comment }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ng-template #dealsBlock>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="3" class="ion-text-start">
+                <ion-icon
+                  name="remove"
+                  class="minus-icon"
+                  (click)="decreaseQuantity(i)"
+                ></ion-icon>
+                &nbsp;
+                <ion-icon
+                  name="add"
+                  class="plus-icon"
+                  (click)="increaseQuantity(i)"
+                ></ion-icon>
+              </ion-col>
+              <ion-col size="6" class="ion-text-justify item-text">
+                {{ item.quantity }}&nbsp;X&nbsp;{{ item.deal.title }}
+                <br />
+                {{item.deal.deal_printed_description}}
+              </ion-col>
+              <ion-col size="3" class="ion-text-end item-price">
+                {{ item.quantity * item.price | productPrice }}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12" class="item-option">
+                <p *ngIf="item.productText">{{ item.productText }}</p>
+                <p *ngIf="item.comment">{{ item.comment }}</p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-grid *ngIf="cart.length" class="ion-text-center">
+    <ion-icon name="cart" class="cart-icon"></ion-icon>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div (click)="goBack()">
+      <ion-row class="charges-row">
+        <ion-col size="12" class="ion-text-end" *ngIf="discountAmount > 0">
+          <h5>Discount - {{ discountAmount | productPrice }}</h5>
+        </ion-col>
+        <ion-col size="12" class="ion-text-end" *ngIf="serviceCharge > 0">
+          <h5>Service Charge - {{ serviceCharge | productPrice }}</h5>
+        </ion-col>
+        <ion-col size="12" class="ion-text-end" *ngIf="packagingCharge > 0">
+          <h5>Parcel Box - {{ packagingCharge | productPrice }}</h5>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="2" class="ion-text-start">
+          <img
+            src="assets/menu_icon_white_black.png"
+            class="footer-menu-logo"
+          />
+        </ion-col>
+        <ion-col size="6" class="ion-text-start">
+          <h5 *ngIf="cart.length > 0">ADD MORE ITEM</h5>
+          <h5 *ngIf="cart.length === 0">ADD ITEM</h5>
+        </ion-col>
+        <ion-col size="4" class="ion-text-end">
+          <h5>
+            {{ (cartTotalAmount + serviceCharge + packagingCharge) -
+            (discountAmount + cartTotalBuyGetAmount) | productPrice }}
+          </h5>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-toolbar>
+</ion-footer>

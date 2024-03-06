@@ -1,0 +1,79 @@
+.half-btn {
+  font-size: 12px;
+  white-space: normal;
+}
+.header-text {
+  border: 1px solid #5260ff;
+  border-radius: 5px;
+  text-align: center;
+  margin: 0px 8px 2px 8px;
+  padding: 5px;
+  font-size: 14px;
+}
+.item-row {
+  margin-left: 5px;
+  margin-right: 5px;
+  .item-col {
+    margin-top: -6px;
+    margin-bottom: -6px;
+    .item-btn {
+      font-size: 12px;
+      white-space: normal;
+      margin-left: -3px;
+      margin-right: -3px;
+    }
+  }
+}
+.option-block {
+  border: 0px;
+  margin-left: 3px;
+  margin-right: -15px;
+  margin-top: -7px;
+  .option-checkbox {
+    margin-left: -15px;
+    margin-right: 5px;
+    width: 12px;
+    height: 12px;
+  }
+  p {
+    font-size: 12px;
+    float: left;
+    margin-top: 2px;
+  }
+  .option-name {
+    width: 75%;
+    text-align: left;
+    white-space: normal;
+  }
+  .price {
+    width: 25%;
+    text-align: right;
+  }
+}
+ion-title {
+  p {
+    float: left;
+  }
+  .deal-title {
+    width: 75%;
+    text-align: left;
+    white-space: normal;
+  }
+  .final-price {
+    width: 25%;
+    text-align: right;
+  }
+}
+.modifier-card {
+  padding: 0px;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+.modifier-card-header {
+  padding: 5px;
+}
+.modifier-category-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #5260ff;
+}

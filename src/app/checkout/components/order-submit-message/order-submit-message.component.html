@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Order Confirmation</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-content class="ion-text-center">
+      <div *ngIf="isOrderSuccess">
+        <div *ngIf="message" [innerHTML]="message"></div>
+      </div>
+      <div *ngIf="!isOrderSuccess">
+        <div *ngIf="message" [innerHTML]="message"></div>
+      </div>
+    </ion-card-content>
+    <ion-button
+      expand="full"
+      class="btn-process-order btn-confirm text-white"
+      (click)="closeModal()"
+      color="tertiary"
+    >
+      BACK TO MENU
+    </ion-button>
+  </ion-card>
+</ion-content>

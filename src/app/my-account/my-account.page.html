@@ -1,0 +1,279 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>MY ACCOUNT</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar class="segment-head">
+    <ion-segment [(ngModel)]="accountSegments">
+      <ion-segment-button value="orders">
+        <ion-label>All Orders</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="updateProfile">
+        <ion-label>Profile</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="updatePassword">
+        <ion-label>Change Password</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div [ngSwitch]="accountSegments" style="padding: 0">
+    <div *ngSwitchCase="'orders'">
+      <h2 class="text-center">All Orders</h2>
+      <div *ngIf="allOrders">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th class="ion-text-start" style="text-align: left">
+                Order Reference
+              </th>
+              <th class="ion-text-center">Status</th>
+              <th class="ion-text-end">Total Amount</th>
+              <!-- <th>&nbsp;</th> -->
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let order of allOrders">
+              <td class="ion-text-start" text-left (click)="viewOrder(order)">
+                {{ order.id }}
+              </td>
+              <td class="ion-text-center" (click)="viewOrder(order)">
+                {{ getOrderStatus(order.order_status) }}
+              </td>
+              <td class="ion-text-end" (click)="viewOrder(order)">
+                {{ order.order_total | productPrice}}
+              </td>
+              <!-- <td class="ion-text-end">
+                <ion-button
+                  color="tertiary"
+                  fill="outline"
+                  size="small"
+                  slot="icon-only"
+                  class="reorder-btn"
+                  *ngIf="order.order_details.length > 0"
+                  (click)="reOrder(order)"
+                >
+                  <ion-icon name="arrow-redo-circle-outline"></ion-icon>
+                </ion-button>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'updateProfile'" class="">
+      <h2 class="text-center">Update Details</h2>
+      <form [formGroup]="updatedCustomerForm" (ngSubmit)="updateCustomer()">
+        <ion-item class="common-input">
+          <ion-select
+            label="Title"
+            labelPlacement="floating"
+            placeholder="Title"
+            [(ngModel)]="userData.title"
+            formControlName="title"
+          >
+            <ion-select-option value="Mr.">Mr.</ion-select-option>
+            <ion-select-option value="Mrs.">Mrs.</ion-select-option>
+            <ion-select-option value="Miss">Miss</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="common-input">
+          <ion-input
+            type="text"
+            label="First Name"
+            labelPlacement="floating"
+            placeholder="Enter First Name"
+            [(ngModel)]="userData.first_name"
+            formControlName="first_name"
+          ></ion-input>
+        </ion-item>
+
+        <p
+          class="error-alert"
+          *ngIf="!updatedCustomerForm.controls['first_name'].valid && updatedCustomerForm.controls['first_name'].touched"
+        >
+          Please enter your first name
+        </p>
+
+        <ion-item class="common-input">
+          <ion-input
+            type="text"
+            label="Last Name"
+            labelPlacement="floating"
+            placeholder="Enter Last Name"
+            [(ngModel)]="userData.last_name"
+            formControlName="last_name"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item class="common-input">
+          <ion-input
+            type="text"
+            label="Mobile Number"
+            labelPlacement="floating"
+            placeholder="Enter Mobile Number"
+            [(ngModel)]="userData.mobile"
+            formControlName="mobile"
+          ></ion-input>
+        </ion-item>
+
+        <p
+          class="alert"
+          *ngIf="!updatedCustomerForm.controls['mobile'].valid && updatedCustomerForm.controls['mobile'].touched"
+        >
+          Please enter your mobile number
+        </p>
+
+        <ion-item class="common-input">
+          <ion-textarea
+            type="textarea"
+            label="Delivery Address"
+            labelPlacement="floating"
+            placeholder="Enter Delivery Address"
+            [(ngModel)]="userData.delivery_address_line_1"
+            formControlName="delivery_address_line_1"
+          ></ion-textarea>
+        </ion-item>
+
+        <ion-item class="common-input">
+          <ion-input
+            type="text"
+            label="Delivery Postcode"
+            labelPlacement="floating"
+            placeholder="Enter Delivery Postcode"
+            [(ngModel)]="userData.delivery_postcode"
+            formControlName="delivery_postcode"
+          ></ion-input>
+        </ion-item>
+
+        <ion-button
+          expand="full"
+          class="common-btn"
+          type="submit"
+          [disabled]="!updatedCustomerForm.valid"
+        >
+          Update
+        </ion-button>
+        <ion-button
+          expand="full"
+          color="danger"
+          (click)="deleteCustomer(userData.id)"
+        >
+          Delete
+        </ion-button>
+      </form>
+    </div>
+
+    <div *ngSwitchCase="'updatePassword'">
+      <h2>Change Password</h2>
+      <form [formGroup]="updatedPasswordForm" (ngSubmit)="changePassword()">
+        <ion-item class="common-input">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            type="password"
+            label="Current Password"
+            labelPlacement="floating"
+            placeholder="Enter Current Password"
+            formControlName="currentPassword"
+          ></ion-input>
+        </ion-item>
+        <div
+          class="error-alert"
+          *ngIf="updatedPasswordForm.controls['currentPassword'].invalid && updatedPasswordForm.controls['currentPassword'].dirty"
+        >
+          <div
+            *ngIf="updatedPasswordForm.controls['currentPassword'].errors?.['required']"
+          >
+            <p class="error-alert">Current password is required.</p>
+          </div>
+          <div
+            *ngIf="updatedPasswordForm.controls['currentPassword'].errors?.['minlength']"
+          >
+            <p class="error-alert">
+              Current password must be at least 5 characters long.
+            </p>
+          </div>
+        </div>
+
+        <ion-item class="common-input">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            type="password"
+            label="New Password"
+            labelPlacement="floating"
+            placeholder="Enter New Password"
+            formControlName="newPassword"
+          ></ion-input>
+        </ion-item>
+        <div
+          class="error-alert"
+          *ngIf="updatedPasswordForm.controls['newPassword'].invalid && updatedPasswordForm.controls['newPassword'].dirty"
+        >
+          <div
+            *ngIf="updatedPasswordForm.controls['newPassword'].errors?.['required']"
+          >
+            <p class="error-alert">New password is required.</p>
+          </div>
+          <div
+            *ngIf="updatedPasswordForm.controls['newPassword'].errors?.['minlength']"
+          >
+            <p class="error-alert">
+              New password must be at least 5 characters long.
+            </p>
+          </div>
+        </div>
+
+        <ion-item class="common-input">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            type="password"
+            label="Confirm New Password"
+            labelPlacement="floating"
+            placeholder="Enter New Password Again"
+            formControlName="confirmPassword"
+          ></ion-input>
+        </ion-item>
+        <div *ngIf="updatedPasswordForm.controls['confirmPassword'].dirty">
+          <div *ngIf="updatedPasswordForm.controls['confirmPassword'].errors">
+            <p class="error-alert">Please enter new password first.</p>
+          </div>
+          <div *ngIf="!updatedPasswordForm.controls['confirmPassword'].errors">
+            <p
+              class="error-alert"
+              *ngIf="!updatedPasswordForm.errors['matchPassword'] && updatedPasswordForm.controls['confirmPassword'].dirty"
+            >
+              New Password not matching
+            </p>
+            <p
+              class="success-alert"
+              *ngIf="updatedPasswordForm.errors['matchPassword'] && updatedPasswordForm.controls['confirmPassword'].dirty"
+            >
+              New Password match
+            </p>
+          </div>
+        </div>
+
+        <ion-button
+          expand="full"
+          class="common-btn"
+          type="submit"
+          [disabled]="!updatedPasswordForm.valid && !updatedPasswordForm.errors['matchPassword']"
+        >
+          Update Password
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>

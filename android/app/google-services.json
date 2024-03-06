@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "531373551112",
+    "project_id": "elipos-test",
+    "storage_bucket": "elipos-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531373551112:android:75096c18e68a467cbfabbd",
+        "android_client_info": {
+          "package_name": "uk.co.restaurant.elipos.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531373551112-rkea6sfskpqv47tp5hiign2n9ktll2kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyNyLNksbxPnX1ricDUMjLt2xPAqP1G5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531373551112-rkea6sfskpqv47tp5hiign2n9ktll2kc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,21 @@
+<ion-buttons>
+  <ion-button
+    type="button"
+    class="ratings"
+    [disabled]="isDisabled"
+    *ngFor="let current of [1, 2, 3, 4, 5]; let i = index"
+    (click)="onClick(i + 1)"
+  >
+    <ion-icon
+      slot="icon-only"
+      name="star"
+      class="normal"
+      *ngIf="i + 1 <= rate || (!hoverRate && i + 1 <= rate)"
+    ></ion-icon>
+    <ion-icon
+      slot="icon-only"
+      name="star-outline"
+      *ngIf="!(i + 1 <= rate || (!hoverRate && i + 1 <= rate))"
+    ></ion-icon>
+  </ion-button>
+</ion-buttons>

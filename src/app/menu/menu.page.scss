@@ -1,0 +1,246 @@
+ion-title {
+  text-align: left;
+}
+.category-select-option {
+  border-top: 1px solid #e1e1e2;
+  ion-select {
+    width: 100%;
+    text-align: center;
+  }
+}
+.slide-row {
+  background-color: var(--color-1);
+  border: solid 1px #fff;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  margin-left: -6px;
+  margin-right: -6px;
+}
+.footer-menu-logo {
+  width: 35px;
+  height: 35px;
+  margin-top: 7px;
+}
+.nav-icon {
+  margin-top: 0px;
+  width: 30px;
+  height: 30px;
+}
+.title-text {
+  padding-top: 5px;
+  font-size: 14px;
+}
+.slide-icon-disable {
+  opacity: 0.2;
+}
+.product {
+  background-color: #e1e1e2;
+  border-bottom: 1px solid gray;
+  margin-left: 0px;
+  margin-right: 0px;
+  .product-title,
+  .deals-title {
+    color: #a42a04;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  .price-text {
+    color: #a42a04;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  .product-description,
+  .sub-product-description,
+  .deals-description {
+    margin-top: -15px;
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .product-icon {
+    color: #a42a04;
+    font-size: 20px;
+    margin-top: 3px;
+  }
+  .plus-icon {
+    font-weight: bold;
+    border: 0.1rem solid var(--color-2);
+    border-radius: 3px;
+    background: var(--color-2);
+    color: #ffffff;
+  }
+}
+.sub-product {
+  background-color: #989aa2;
+  border-bottom: 1px solid #ffffff;
+  margin-left: 0px;
+  margin-right: 0px;
+  .sub-product-title {
+    color: #ffffff;
+    margin-top: 5px;
+  }
+  .price-text {
+    color: #ffffff;
+    margin-top: 5px;
+  }
+  .sub-product-description {
+    margin-top: -15px;
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .product-icon {
+    color: #a42a04;
+    font-size: 20px;
+    margin-top: 3px;
+  }
+  .plus-icon {
+    font-weight: bold;
+    border: 0.1rem solid var(--color-2);
+    border-radius: 3px;
+    background: var(--color-2);
+    color: #ffffff;
+  }
+}
+.deals-product {
+  background-color: #989aa2;
+  border-bottom: 1px solid #ffffff;
+  margin-left: 0px;
+  margin-right: 0px;
+  .deals-product-title {
+    color: #ffffff;
+    margin-top: 5px;
+  }
+  .price-text {
+    color: #ffffff;
+    margin-top: 5px;
+  }
+  .deals-description {
+    margin-top: -15px;
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+  .product-icon {
+    color: #a42a04;
+    font-size: 20px;
+    margin-top: 3px;
+  }
+  .plus-icon {
+    font-weight: bold;
+    border: 0.1rem solid var(--color-2);
+    border-radius: 3px;
+    background: var(--color-2);
+    color: #ffffff;
+  }
+  .deals-description {
+    margin-top: -15px;
+    margin-bottom: 0px;
+    font-size: 14px;
+  }
+}
+.charges-row {
+  h5 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+}
+.product-content-block {
+  height: calc(100vh - 300px);
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
+// special offer button
+.cont {
+  position: relative;
+  width: 45vw;
+  height: 9vw;
+  overflow: hidden;
+}
+.sf-button {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--color-1);
+  position: realtive;
+  border: 2px dashed #0b85cf;
+  border-radius: 10px;
+  outline: none;
+  transition: box-shadow 0.3s linear;
+}
+.sf-button:active {
+  box-shadow: inset 0px 0px 0px black, inset 0px 0px 105px #f7ea25;
+}
+@keyframes bump {
+  0% {
+    transform: scale(1, 1) translateX(0px);
+  }
+  9% {
+    transform: scale(1.1, 0.9) translateY(20px);
+  }
+  28% {
+    transform: scale(0.7, 1.3) translateY(-100px) translateX(55px);
+  }
+  35% {
+    transform: scale(1, 1) translateY(20px);
+  }
+  50% {
+    transform: scale(1, 1.1);
+  }
+  60% {
+    transform: scale(1.1, 0.9) translateY(20px);
+  }
+  80% {
+    transform: scale(0.7, 1.3) translateY(-100px) translateX(-55px);
+  }
+  88% {
+    transform: scale(1, 1) translateY(20px);
+  }
+  100% {
+    transform: scale(1, 1) translateX(0px);
+  }
+}
+.text {
+  display: flex;
+  position: absolute;
+  font-size: 4vw;
+  font-family: "Anton", sans-serif;
+  p:nth-child(1n) {
+    transform: rotate(8deg);
+    animation: shake 0.5s ease infinite;
+    color: white;
+    font-weight: bold;
+  }
+  p:nth-child(2n) {
+    transform: rotate(5deg);
+    animation: shake 0.5s ease-out infinite reverse;
+    color: var(--color-3);
+    font-weight: bold;
+  }
+  p:nth-child(3n) {
+    transform: rotate(-2deg);
+    animation: shake 0.5s 0.1s ease infinite;
+  }
+  p:nth-child(4n) {
+    transform: rotate(-5deg);
+    animation: shake 0.5s ease-in infinite reverse;
+  }
+}
+@keyframes shake {
+  0% {
+    transform: translateX(0) rotate(8deg);
+  }
+  50% {
+    transform: translateX(4px) rotate(-3deg);
+  }
+  100% {
+    transform: translateX(0) rotate(6deg);
+  }
+}
+i {
+  color: #2867b2;
+  margin-top: 1vw;
+}

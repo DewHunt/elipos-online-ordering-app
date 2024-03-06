@@ -1,0 +1,7 @@
+{
+  "name": "Elipos Online Ordering App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="tertiary" class="ion-text-center">
+    <ion-title>New update available</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-no-padding">
+      <ion-col class="ion-text-center ion-no-padding">
+        <div [innerHtml]="updateMessage"></div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-no-padding ion-no-padding">
+      <ion-col class="ion-no-padding">
+        <ion-button expand="full" color="danger" (click)="closeModal()">
+          Close
+        </ion-button>
+      </ion-col>
+      <ion-col class="ion-no-padding">
+        <ion-button expand="full" color="tertiary" (click)="update()">
+          Update
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,338 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      {{ deal.title }} - {{ dealTotalPrice | productPrice }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div [class.ion-hide]="isShowDealItemsBlock">
+    <div *ngFor="let dealItem of deal.deals_items; let rowIndex = index">
+      <ion-card id="item-{{ dealItem.id }}">
+        <ion-card-header class="deals-block item-header item-{{ dealItem.id }}">
+          <ion-grid class="ion-no-margin ion-no-padding">
+            <ion-row class="ion-no-margin ion-no-padding">
+              <ion-col size="10">
+                <h6 (click)="dealItemProductToggle(dealItem.id)">
+                  <span *ngIf="deal.deals_items.length > 1">
+                    {{ rowIndex + 1 }}.
+                  </span>
+                  &nbsp;{{ dealItem.title }} ({{ dealItem.limit }})
+                </h6>
+              </ion-col>
+              <ion-col size="2" class="ion-text-end">
+                <h6
+                  (click)="dealItemProductToggle(dealItem.id)"
+                  class="product-icon deal-icon-{{ dealItem.id }}"
+                >
+                  <ion-icon
+                    class="iconToggle"
+                    name="chevron-forward-outline"
+                  ></ion-icon>
+                </h6>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+
+        <!-- Start Deal Item -->
+        <ion-card-content
+          class="{{ dealItem.id }} item-block-{{ rowIndex }}"
+          style="display: none"
+        >
+          <!-- Start Deal Item Products -->
+          <div *ngIf="dealItem.products !== null">
+            <div
+              *ngFor="let product of dealItem.products; let rowIndex = index"
+              class="product-block"
+            >
+              <ion-row>
+                <ion-col size="8.5" class="ion-text-start">
+                  <ion-item class="option-block" lines="none">
+                    <ion-checkbox
+                      slot="start"
+                      (ionChange)="
+                        getModifierLists($event, dealItem, product, null)
+                      "
+                      class="ipc-{{ dealItem.id }} item-checkbox-{{
+                        dealItem.id
+                      }}-{{ product.foodItemId }}-0"
+                    ></ion-checkbox>
+                    <ion-label class="item-lable">
+                      {{ product.foodItemName }}
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="3.5" class="ion-text-end">
+                  <!--Item quantity add and remove-->
+                  <h6
+                    class="item-quantity-block item-qty-{{ dealItem.id }}-{{
+                      product.foodItemId
+                    }}-0"
+                    style="display: none"
+                  >
+                    <p class="product-icon">
+                      &nbsp;
+                      <ion-icon
+                        class="iconToggle"
+                        name="chevron-forward-outline"
+                        (click)="showModifiers(dealItem, product, null)"
+                      ></ion-icon>
+                    </p>
+                    <div class="btn-block" *ngIf="dealItem.limit > 1">
+                      <p
+                        class="item-quantity-add product-qty-add-{{
+                          dealItem.id
+                        }}-{{ product.foodItemId }}-0"
+                        (click)="addItemQuantity(dealItem, product, null)"
+                      >
+                        <ion-icon
+                          name="add-outline"
+                          class="add-icon"
+                        ></ion-icon>
+                      </p>
+                      <p
+                        class="item-quantity total-item-qty-{{ dealItem.id }}-{{
+                          product.foodItemId
+                        }}-0"
+                      >
+                        {{ getItemQuantity(dealItem, product, null) }}
+                      </p>
+                      <p
+                        class="item-quantity-remove product-qty-remove-{{
+                          dealItem.id
+                        }}-{{ product.foodItemId }}-0"
+                        (click)="removeItemQuantity(dealItem, product, null)"
+                      >
+                        <ion-icon
+                          name="remove-outline"
+                          class="remove-icon"
+                        ></ion-icon>
+                      </p>
+                    </div>
+                  </h6>
+                  <ng-template #onlyOneProduct> </ng-template>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <!-- End Deal Item Products  -->
+
+          <!-- Start Deal Item Sub-Products -->
+          <div *ngIf="dealItem.subProducts !== null">
+            <div
+              *ngFor="
+                let subProduct of dealItem.subProducts;
+                let rowIndex = index
+              "
+              style="border-bottom: 1px solid grey"
+              class="product-block"
+            >
+              <ion-row>
+                <ion-col size="8.5" class="ion-text-start">
+                  <ion-item class="option-block" lines="none">
+                    <ion-checkbox
+                      slot="start"
+                      (ionChange)="
+                        getModifierLists($event, dealItem, null, subProduct)
+                      "
+                      class="isc-{{ dealItem.id }} item-checkbox-{{
+                        dealItem.id
+                      }}-{{ subProduct.foodItemId }}-{{
+                        subProduct.selectiveItemId
+                      }}"
+                    ></ion-checkbox>
+                    <ion-label class="item-lable">
+                      {{ subProduct.selectiveItemName }}
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="3.5" class="ion-text-end">
+                  <!--Item quantity add and remove-->
+                  <h6
+                    class="item-quantity-block item-qty-{{ dealItem.id }}-{{
+                      subProduct.foodItemId
+                    }}-{{ subProduct.selectiveItemId }}"
+                    style="display: none"
+                  >
+                    <p class="product-icon">
+                      &nbsp;
+                      <ion-icon
+                        class="iconToggle"
+                        name="chevron-forward-outline"
+                        (click)="showModifiers(dealItem, null, subProduct)"
+                      ></ion-icon>
+                    </p>
+                    <div *ngIf="dealItem.limit > 1">
+                      <p
+                        class="item-quantity-add product-qty-add-{{
+                          dealItem.id
+                        }}-{{ subProduct.foodItemId }}-{{
+                          subProduct.selectiveItemId
+                        }}"
+                        (click)="addItemQuantity(dealItem, null, subProduct)"
+                      >
+                        <ion-icon
+                          name="add-outline"
+                          class="add-icon"
+                        ></ion-icon>
+                      </p>
+                      <p
+                        class="item-quantity total-item-qty-{{ dealItem.id }}-{{
+                          subProduct.foodItemId
+                        }}-{{ subProduct.selectiveItemId }}"
+                      >
+                        {{ getItemQuantity(dealItem, null, subProduct) }}
+                      </p>
+                      <p
+                        class="item-quantity-remove product-qty-remove-{{
+                          dealItem.id
+                        }}-{{ subProduct.foodItemId }}-{{
+                          subProduct.selectiveItemId
+                        }}"
+                        (click)="removeItemQuantity(dealItem, null, subProduct)"
+                      >
+                        <ion-icon
+                          name="remove-outline"
+                          class="remove-icon"
+                        ></ion-icon>
+                      </p>
+                    </div>
+                  </h6>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <!-- End Deal Item Sub-Products -->
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div [class.ion-hide]="isShowModifiersBlock">
+    <div *ngIf="modifierLists">
+      <div *ngIf="modifierLists.length > 0; else noModifier">
+        <ion-button expand="full" color="warning" (click)="backToDealItems()">
+          Back To Deal Items
+        </ion-button>
+        <div class="product-modifier-block">
+          <span *ngFor="let modifier of modifierLists">
+            <div
+              *ngIf="modifier.SideDishes.length > 0"
+              class="modifier-category"
+            >
+              {{ modifier.ModifierCategoryName }}
+            </div>
+            <span *ngFor="let sideDish of modifier.SideDishes">
+              <ion-row class="modifier-block ion-no-padding">
+                <ion-col size="6" class="ion-text-start ion-no-padding">
+                  <h6 class="modifier-text">
+                    {{ sideDish.SideDishesName }}
+                  </h6>
+                </ion-col>
+                <ion-col size="6" class="ion-text-end ion-no-padding">
+                  <span
+                    *ngIf="
+                      getAddedModifier(
+                        modifierLists.dealItem,
+                        modifierLists.product,
+                        modifierLists.subProduct,
+                        sideDish
+                      );
+                      let addedModifier
+                    "
+                  >
+                    <h6 class="modifier-icon-block">
+                      <ion-icon
+                        name="remove-outline"
+                        class="modifier-remove-icon"
+                        (click)="
+                          removeModifier(
+                            modifierLists.product,
+                            modifierLists.subProduct,
+                            modifierLists.dealItem,
+                            sideDish,
+                            modifier
+                          )
+                        "
+                      ></ion-icon>
+                    </h6>
+                    <h6 class="modifier-remove-price">
+                      X{{ addedModifier.quantity }}
+                      &nbsp;=&nbsp;
+                      {{ addedModifier.totalPrice | productPrice }}
+                    </h6>
+                  </span>
+                  <h6
+                    *ngIf="sideDish.UnitPrice >= 0"
+                    class="modifier-add-price"
+                  >
+                    {{ sideDish.UnitPrice | productPrice }}
+                  </h6>
+                  <h6 class="modifier-add-price">
+                    <ion-icon
+                      name="add-outline"
+                      class="modifier-add-icon"
+                      (click)="
+                        addModifier(
+                          modifierLists.product,
+                          modifierLists.subProduct,
+                          modifierLists.dealItem,
+                          sideDish,
+                          modifier,
+                          modifierLists.lastModifier
+                        )
+                      "
+                    ></ion-icon>
+                  </h6>
+                </ion-col>
+              </ion-row>
+            </span>
+          </span>
+        </div>
+      </div>
+      <ng-template #noModifier>
+        <h3>This product has no modifiers</h3>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer #footer class="footer">
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button
+          expand="full"
+          color="danger"
+          class="close-modal"
+          (click)="closeModal()"
+        >
+          Close
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <span *ngIf="isDealReadyToCard; else incomplteDealblock">
+          <ion-button
+            expand="full"
+            [attr.disabled]="!isDealReadyToCard"
+            class="common-btn"
+            (click)="addDealToCart()"
+          >
+            Confirm
+          </ion-button>
+        </span>
+        <ng-template #incomplteDealblock>
+          <ion-button
+            expand="full"
+            class="common-btn"
+            (click)="showIncompleteItem()"
+          >
+            Confirm
+          </ion-button>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

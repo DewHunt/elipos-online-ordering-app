@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Give Your Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="addFeedbackForm" (ngSubmit)="saveFeedback()">
+    <div class="ratings-row">
+      <h2
+        [ngClass]="
+          ratePrice <= 0 || rateService <= 0 || rateTaste <= 0
+            ? 'has-error'
+            : ''
+        "
+      >
+        Ratings
+      </h2>
+
+      <ion-row>
+        <ion-col size="4">
+          <label class="label" for="food">Food</label>
+        </ion-col>
+        <ion-col size="8">
+          <app-ratings
+            [rate]="rateTaste"
+            [readonly]="false"
+            [small]="false"
+            (rateChange)="onRateChangeTaste($event)"
+          >
+          </app-ratings>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="4">
+          <label class="label" for="service">Service</label>
+        </ion-col>
+        <ion-col size="8">
+          <app-ratings
+            [rate]="rateService"
+            [readonly]="false"
+            [small]="false"
+            (rateChange)="onRateChangeService($event)"
+          >
+          </app-ratings>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="4"
+          ><label class="label" for="atmosphere">Atmosphere</label></ion-col
+        >
+        <ion-col size="8">
+          <app-ratings
+            [rate]="ratePrice"
+            [readonly]="false"
+            [small]="false"
+            (rateChange)="onRateChangePrice($event)"
+          >
+          </app-ratings>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="ratings-row">
+      <h2>Share more about your experience</h2>
+      <ion-row>
+        <ion-col size="12">
+          <ion-textarea
+            rows="3"
+            class="input"
+            formControlName="message"
+            placeholder="Share more about your experience"
+          ></ion-textarea>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="ratings-row">
+      <h2>Did you dine in, take out, or get delivery?</h2>
+      <ion-row>
+        <ion-col size="12">
+          <ion-button color="light" (click)="chooseOrderType('Dine in')">
+            <ion-icon
+              name="checkmark-outline"
+              *ngIf="this.orderTypes[0].isChoosed"
+            ></ion-icon>
+            Dine in
+          </ion-button>
+          <ion-button color="light" (click)="chooseOrderType('Take out')">
+            <ion-icon
+              name="checkmark-outline"
+              *ngIf="this.orderTypes[1].isChoosed"
+            ></ion-icon>
+            Take out
+          </ion-button>
+          <ion-button color="light" (click)="chooseOrderType('Delivery')">
+            <ion-icon
+              name="checkmark-outline"
+              *ngIf="this.orderTypes[2].isChoosed"
+            ></ion-icon>
+            Delivery
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="ratings-row">
+      <h2
+        [ngClass]="addFeedbackForm.controls['name'].invalid ? 'has-error' : ''"
+      >
+        Name
+      </h2>
+      <ion-row>
+        <ion-col size="12">
+          <ion-input
+            type="text"
+            class="input"
+            formControlName="name"
+            placeholder="Please enter your name"
+          ></ion-input>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="ratings-row">
+      <h2
+        [ngClass]="addFeedbackForm.controls['email'].invalid ? 'has-error' : ''"
+      >
+        Email
+      </h2>
+      <ion-row>
+        <ion-col>
+          <ion-input
+            type="email"
+            class="input"
+            formControlName="email"
+            placeholder="Please enter your name"
+          ></ion-input>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="ratings-row">
+      <ion-row>
+        <ion-col size="12">
+          <ion-button
+            type="submit"
+            expand="full"
+            class="common-btn"
+            [disabled]="
+              addFeedbackForm.invalid ||
+              ratePrice <= 0 ||
+              rateService <= 0 ||
+              rateTaste <= 0
+            "
+          >
+            Submit Feedback
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </form>
+</ion-content>

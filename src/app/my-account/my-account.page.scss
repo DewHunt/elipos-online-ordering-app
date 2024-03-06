@@ -1,0 +1,34 @@
+ion-segment {
+  width: -webkit-fill-available;
+  -webkit-text-stroke-width: thin;
+  ion-segment-button {
+    --indicator-color: var(--color-1);
+    font-size: 1;
+  }
+  /* Material Design styles */
+  ion-segment-button.md {
+    --color: #ffffff;
+    --color-checked: #000000;
+    --indicator-height: 4px;
+  }
+  /* iOS styles */
+  ion-segment-button.ios {
+    --color: #ffffff;
+    --color-checked: #ffffff;
+    --border-radius: 5px;
+  }
+}
+th,
+td {
+  font-size: 12px;
+}
+.segment-head {
+  --background: var(--color-3);
+}
+.logout-btn {
+  font-size: 30px;
+  font-weight: bold !important;
+}
+.reorder-btn {
+  font-size: 12px;
+}

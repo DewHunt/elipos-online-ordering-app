@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="danger" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <div class="banner-spinal-block" [hidden]="showSlider">
+    <ion-spinner name="dots"></ion-spinner>
+  </div> -->
+  <swiper-container>
+    <swiper-slide *ngFor="let banner of bannerImages">
+      <img src="{{ banner.imagePath }}" />
+    </swiper-slide>
+  </swiper-container>
+
+  <!-- <ion-slides [options]="slideOpts" pager="true">
+    <ion-slide *ngFor="let banner of bannerImages">
+      <img src="{{ banner.imagePath }}" />
+    </ion-slide>
+  </ion-slides> -->
+</ion-content>

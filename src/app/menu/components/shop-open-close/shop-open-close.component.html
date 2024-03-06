@@ -1,0 +1,60 @@
+<ion-content>
+  <div class="msg-content">
+    <div class="msg-body">
+      <img src="{{ imageUrl }}" alt="colsed-image" />
+      <span *ngIf="isShopMaintenanceMode === '1'">{{ message }}</span>
+    </div>
+    <div class="msg-btn">
+      <div *ngIf="isShopMaintenanceMode === '1' || isShopWeekendOff === true">
+        <ion-button expand="full" color="tertiary" (click)="closeModal()">
+          OK, I Understand!
+        </ion-button>
+      </div>
+      <div *ngIf="isShopClosed === true">
+        <ion-row>
+          <ion-col>
+            <ion-button expand="full" color="danger" (click)="closeModal()">
+              No Thanks
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="full" color="tertiary" (click)="setPreOrder()">
+              Pre-Order
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div *ngIf="isShopMaintenanceMode === '0'">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-bordered">
+            <thead>
+              <tr>
+                <th class="ion-text-center">Day</th>
+                <th class="ion-text-center">Opening</th>
+                <th class="ion-text-center">Closing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let shopTime of shopTimingList">
+                <td class="ion-text-center">{{ shopTime.day_name }}</td>
+                <td
+                  colspan="2"
+                  class="ion-text-center"
+                  *ngIf="shopTime.is_closed"
+                >
+                  Closed
+                </td>
+                <td class="ion-text-center" *ngIf="!shopTime.is_closed">
+                  {{ shopTime.open_time }}
+                </td>
+                <td class="ion-text-center" *ngIf="!shopTime.is_closed">
+                  {{ shopTime.close_time }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        class="img-col"
+        size="6"
+        *ngFor="let image of images; let i = index"
+      >
+        <div (click)="showImage(image)">
+          <img class="gallery-imgs" src="{{ get_url(image) }}" alt="" />
+          <div
+            class="image-container"
+            [style.background-image]="'url('+get_url(image)+')'"
+          ></div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

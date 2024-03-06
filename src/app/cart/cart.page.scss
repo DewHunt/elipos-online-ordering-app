@@ -1,0 +1,98 @@
+.footer-menu-logo {
+  width: 35px;
+  height: 35px;
+  margin-top: 7px;
+}
+.charges-row {
+  h5 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+}
+.even {
+  background-color: #d3d3d3;
+  color: #000000;
+}
+.odd {
+  background-color: #fefefe;
+  color: #000000;
+}
+.item-info {
+  margin: 0px;
+  padding: 0px;
+  .item-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+  }
+  .item-descirption,
+  .item-comment {
+    font-size: 18px;
+    font-weight: bold;
+    color: #232222;
+    text-align: justify;
+  }
+  .item-option {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff0000;
+    text-align: justify;
+  }
+  .item-free {
+    font-size: 18px;
+    font-weight: bold;
+    color: #008000;
+  }
+  .item-qty {
+    font-size: 20px;
+    line-height: 30px;
+    text-align: start !important;
+  }
+  .item-price {
+    font-size: 20px;
+    line-height: 30px;
+    text-align: end !important;
+  }
+  .item-btns {
+    text-align: center;
+    .minus-icon {
+      color: #ffffff;
+      font-weight: bolder;
+      border: 1px solid transparent;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      border-radius: 50%;
+      background: #ff0000;
+      padding: 6px;
+    }
+    .plus-icon {
+      color: #ffffff;
+      font-weight: bolder;
+      border: 1px solid transparent;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      border-radius: 50%;
+      background: #008000;
+      padding: 6px;
+    }
+    .remove-icon {
+      color: #ffffff;
+      font-weight: bolder;
+      border: 1px solid #ebebeb;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      border-radius: 50%;
+      background: #ff0000;
+      padding: 6px;
+    }
+  }
+}
+.cart-icon {
+  width: 150px;
+  height: 150px;
+  color: #b68540;
+  opacity: 0.5;
+}

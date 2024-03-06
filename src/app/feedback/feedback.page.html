@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid *ngIf="isFeedbackExists; else feedbackBlock">
+    <ion-row
+      class="ratings-container"
+      *ngFor="let feedback of allApprovedFeedbacks"
+    >
+      <ion-col class="head" size="12">{{feedback.name}}</ion-col>
+      <ion-col size="12">{{feedback.created_at}}</ion-col>
+      <ion-col size="12">
+        <app-ratings [rate]="feedback.ratings" [readonly]="true"></app-ratings>
+      </ion-col>
+      <ion-col size="12" class="message">
+        {{ feedback.choosed_order_types }}
+      </ion-col>
+      <ion-col size="12" class="message">{{ feedback.message }}</ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ng-template #feedbackBlock>
+    <ion-grid>
+      <ion-row class="ratings-container">
+        <ion-col class="head ion-text-center" size="12">
+          No Feedback to show
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="full" class="common-btn" (click)="addFeedBack()">
+    Add Your Feedback
+  </ion-button>
+</ion-footer>

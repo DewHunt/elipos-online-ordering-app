@@ -1,0 +1,232 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        default-href="#"
+        (click)="closeModal()"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Order View</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="order">
+    <h3 class="ion-text-center">Order Information</h3>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped">
+        <tr>
+          <th class="ion-text-start" width="150px">Order Reference</th>
+          <td text-left>{{ order.id }}</td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-start" width="150px">Order Status</th>
+          <td text-left>{{ getOrderStatus(order.order_status) }}</td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-start" width="150px">Order Type</th>
+          <td text-left style="text-transform: capitalize">
+            {{ order.order_type }}
+          </td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-start" width="150px">Order Date</th>
+          <td text-left>{{ order.order_time | dateFormat : "dd/MM/yyyy" }}</td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-start" width="150px">
+            {{ deliverOrCollectionTimeLabel }}
+          </th>
+          <td text-left>{{ deliverOrCollectionTime }}</td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-start" width="150px">Payment Method</th>
+          <td text-left style="text-transform: capitalize">
+            {{ order.payment_method }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <h3 class="ion-text-center">Order Details</h3>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped">
+        <tr>
+          <th class="ion-text-start">Name</th>
+          <th class="ion-text-end">Qty</th>
+          <th class="ion-text-end" width="70px">Unit Price</th>
+          <th class="ion-text-end" width="70px">Sub Total</th>
+        </tr>
+        <tr *ngFor="let orderDetail of orderDetails">
+          <td class="ion-text-start">
+            <strong>{{ orderDetail.product_name }}</strong>
+            <p *ngIf="orderDetail.options.with">
+              <span
+                *ngFor="let with of orderDetail.options.with; let i = index"
+              >
+                <span *ngIf="i">, </span>{{ with.SideDishesName }}
+              </span>
+            </p>
+
+            <p *ngIf="orderDetail.options.without">
+              <span
+                *ngFor="
+                  let without of orderDetail.options.without;
+                  let i = index
+                "
+                ><span *ngIf="i">, </span>No {{ without.SideDishesName }}</span
+              >
+            </p>
+
+            <p *ngIf="orderDetail.item_comments">
+              {{ orderDetail.item_comments }}
+            </p>
+          </td>
+          <td class="ion-text-end">{{ orderDetail.quantity }}</td>
+          <td class="ion-text-end">
+            {{ orderDetail.unit_price | productPrice }}
+          </td>
+          <td class="ion-text-end">
+            {{
+              orderDetail.unit_price * orderDetail.quantity -
+                orderDetail.buy_get_amount | productPrice
+            }}
+          </td>
+        </tr>
+
+        <tr *ngFor="let dealDetail of dealDetails">
+          <td class="ion-text-start">
+            <strong>{{ dealDetail.title }}</strong>
+            <div
+              *ngFor="
+                let dealItem of getItemsDetails(dealDetail.itemsDetails);
+                let i = index
+              "
+            >
+              <div *ngIf="dealItem.isHalfDeal !== undefined">
+                <strong
+                  *ngIf="dealItem.isHalfDeal === false"
+                  class="second-row"
+                >
+                  {{ i + 1 }}.&nbsp;{{ dealItem.title }}
+                </strong>
+              </div>
+              <div *ngIf="dealItem.isHalfDeal === undefined">
+                <strong class="second-row">
+                  {{ i + 1 }}.&nbsp;{{ dealItem.title }}
+                </strong>
+              </div>
+              <div *ngIf="dealItem.itemProducts">
+                <div
+                  *ngFor="
+                    let itemProduct of dealItem.itemProducts;
+                    let j = index
+                  "
+                >
+                  <strong
+                    *ngIf="dealItem.isHalfDeal === true"
+                    class="second-row"
+                  >
+                    {{ itemProduct.portion }}
+                  </strong>
+                  <div
+                    *ngIf="itemProduct.product && !itemProduct.subProduct"
+                    class="third-row"
+                  >
+                    {{ itemProduct.product.foodItemName }}&nbsp;({{
+                      itemProduct.quantity
+                    }})
+                    <div *ngIf="itemProduct.modifiers">
+                      <span
+                        *ngFor="
+                          let modifier of itemProduct.modifiers;
+                          let k = index
+                        "
+                        class="fourth-row"
+                      >
+                        {{ modifier.SideDishesName }}&nbsp;({{
+                          modifier.UnitPrice
+                        }}
+                        X {{ modifier.quantity }})<br />
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="itemProduct.subProduct" class="third-row">
+                    {{ itemProduct.subProduct.selectiveItemName }}&nbsp;({{
+                      itemProduct.quantity
+                    }})
+                    <div *ngIf="itemProduct.modifiers">
+                      <span
+                        *ngFor="
+                          let modifier of itemProduct.modifiers;
+                          let k = index
+                        "
+                        class="fourth-row"
+                      >
+                        {{ modifier.SideDishesName }}&nbsp;({{
+                          modifier.UnitPrice
+                        }}
+                        X {{ modifier.quantity }})<br />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="ion-text-end">{{ dealDetail.quantity }}</td>
+          <td class="ion-text-end">{{ dealDetail.price | productPrice }}</td>
+          <td class="ion-text-end">
+            {{ dealDetail.price * dealDetail.quantity | productPrice }}
+          </td>
+        </tr>
+
+        <tr>
+          <th class="ion-text-end" colspan="3">Total Amount</th>
+          <td class="ion-text-end">{{ order.subTotal | productPrice }}</td>
+        </tr>
+        <tr *ngIf="order.discount > 0">
+          <th class="ion-text-end" colspan="3">Discount</th>
+          <td class="ion-text-end">- {{ order.discount | productPrice }}</td>
+        </tr>
+        <tr *ngIf="order.service_charge > 0">
+          <th class="ion-text-end" colspan="3">Service Charge</th>
+          <td class="ion-text-end">
+            + {{ order.service_charge | productPrice }}
+          </td>
+        </tr>
+        <tr *ngIf="order.packaging_charge > 0">
+          <th class="ion-text-end" colspan="3">Percel Box</th>
+          <td class="ion-text-end">
+            + {{ order.packaging_charge | productPrice }}
+          </td>
+        </tr>
+        <tr *ngIf="order.surcharge > 0 && order.payment_method !== 'cash'">
+          <th class="ion-text-end" colspan="3">Card Fee</th>
+          <td class="ion-text-end">+ {{ order.surcharge | productPrice }}</td>
+        </tr>
+        <tr *ngIf="order.delivery_charge > 0">
+          <th class="ion-text-end" colspan="3">Delivery Charge</th>
+          <td class="ion-text-end">
+            + {{ order.delivery_charge | productPrice }}
+          </td>
+        </tr>
+        <tr *ngIf="order.tips > 0">
+          <th class="ion-text-end" colspan="3">Tips</th>
+          <td class="ion-text-end">+ {{ order.tips | productPrice }}</td>
+        </tr>
+        <tr>
+          <th class="ion-text-end" colspan="3">Amount To Pay</th>
+          <td class="ion-text-end">
+            {{ order.order_total | productPrice }}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</ion-content>

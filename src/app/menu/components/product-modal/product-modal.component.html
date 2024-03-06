@@ -1,0 +1,107 @@
+<ion-header #header_block>
+  <ion-toolbar class="ion-text-center">
+    <ion-title
+      *ngIf="sideDishesAsModifierCategory.length > 0; else second_header"
+    >
+      <p *ngIf="subProduct; else productHeader">
+        Select Options [{{ subProduct.selectiveItemName }}]
+      </p>
+      <ng-template #productHeader>
+        <p>Select Options [{{ product.foodItemName }}]</p>
+      </ng-template>
+    </ion-title>
+    <ng-template #second_header>
+      <ion-title></ion-title>
+    </ng-template>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid #option_grid_block *ngIf="sideDishesAsModifierCategory.length > 0">
+    <form [formGroup]="form">
+      <div
+        *ngFor="let sideDishAsModifierCategory of sideDishesAsModifierCategory"
+        class="option-as-category"
+      >
+        <span *ngIf="sideDishAsModifierCategory.SideDishes.length > 0">
+          <ion-row>
+            <ion-col size="12" class="ion-text-center">
+              <h4 class="category-name">
+                {{ sideDishAsModifierCategory.ModifierCategoryName }}
+              </h4>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col
+              size="6"
+              *ngFor="let sideDish of sideDishAsModifierCategory.SideDishes"
+              formGroupName="{{ sideDish.SideDishesId }}"
+              class="with-{{ sideDish.SideDishesId }} option-col"
+            >
+              <ion-item class="option-block" lines="none">
+                <ion-checkbox
+                  class="option-checkbox mc-id-{{
+                    sideDish.ModifierCategoryId
+                  }}"
+                  slot="start"
+                  formControlName="with-{{ sideDish.SideDishesId }}"
+                  (ionChange)="
+                    withOption($event, sideDish, sideDishAsModifierCategory)
+                  "
+                ></ion-checkbox>
+                <ion-label>
+                  <p class="option-name">
+                    {{ sideDish.SideDishesName }}
+                  </p>
+                  <p class="price">
+                    {{ sideDish.UnitPrice | productPrice }}
+                  </p>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </span>
+      </div>
+    </form>
+
+    <ion-row #comment_block *ngIf="!commentInFooterFixed">
+      <ion-col size="12">
+        <ion-list class="input-block">
+          <ion-item lines="none">
+            <ion-label position="floating">Notes</ion-label>
+            <ion-textarea #comment class="comment"></ion-textarea>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer #footer>
+  <ion-toolbar class="ion-text-center">
+    <ion-grid>
+      <ion-row *ngIf="commentInFooterFixed">
+        <ion-col size="12">
+          <ion-list class="input-block">
+            <ion-item lines="none">
+              <ion-label position="floating">Notes</ion-label>
+              <ion-textarea #comment class="comment"></ion-textarea>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6" class="no-margin">
+          <ion-button expand="full" color="danger" (click)="closeModal()">
+            Close
+          </ion-button>
+        </ion-col>
+        <ion-col size="6" class="no-margin">
+          <ion-button expand="full" class="common-btn" (click)="addItem()">
+            Confirm
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

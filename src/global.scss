@@ -1,0 +1,199 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+@import "./assets/css/fonts.css";
+@import "./assets/css/bootstrap/table.css";
+:root {
+  --color-1: #4063f9; // Background
+  --color-2: #4063f9; // Item Add Button
+  --color-3: #ffc236; // For Button
+  --background-color: none; // Home page background color
+  .action-sheet-title.sc-ion-action-sheet-md {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    text-align: center;
+    background: #eb445a;
+    color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    font-size: 18px;
+  }
+  .action-sheet-button.sc-ion-action-sheet-md {
+    background: #e1e1e2;
+    border-bottom: 1px solid #8b8282;
+  }
+  .action-sheet-button-inner.sc-ion-action-sheet-md {
+    justify-content: center;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .action-sheet-selected.sc-ion-action-sheet-md {
+    background: #eb445a;
+    .action-sheet-button-inner.sc-ion-action-sheet-md {
+      color: #ffffff;
+    }
+  }
+  .action-sheet-cancel.sc-ion-action-sheet-md {
+    background: #eb445a;
+    border-bottom: 1px solid #ffffff;
+    .action-sheet-button-inner.sc-ion-action-sheet-md {
+      color: #ffffff;
+    }
+  }
+  .toast-message {
+    padding: 100% 16px 17px;
+  }
+}
+
+// * {
+//   font-family: "montserrat";
+// }
+ion-loading.custom-loading {
+  --background: #ffffff;
+  --spinner-color: #ff0000;
+  color: #ff0000;
+}
+ion-toolbar {
+  --background: var(--color-1);
+  color: #ffffff;
+}
+ion-menu-button {
+  color: #ffffff !important;
+}
+ion-back-button {
+  color: #ffffff !important;
+}
+.close-icon {
+  color: #ffffff !important;
+}
+.auth-page-head {
+  background: #543e6c;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 10px 5px;
+  text-align: center;
+  .title {
+    font-size: 25px;
+    color: #ffffff;
+    padding-bottom: 5px;
+  }
+  .sub-title {
+    font-size: 18px;
+    color: #ffffff;
+  }
+}
+.common-input {
+  margin: 5px 5px;
+  padding: 0px;
+  border: 1px solid black;
+  border-radius: 5px;
+  ion-icon {
+    margin-right: 5px;
+  }
+}
+.common-btn {
+  --background: var(--color-3);
+  color: #000000;
+}
+.error-alert {
+  color: #ff0000;
+  font-weight: bold;
+  text-align: left;
+  margin: 0px 10px 0px 10px;
+}
+.success-alert {
+  color: #008000;
+  font-weight: bold;
+  text-align: left;
+  margin: 0px 10px 0px 10px;
+}
+.tips-modal {
+  --max-width: 90% !important;
+  --max-height: 60% !important;
+  top: 0px;
+  position: absolute;
+  border-radius: 0px;
+}
+.shop-open-closed-modal {
+  --max-width: 90% !important;
+  --max-height: 60% !important;
+  top: 0px;
+  position: absolute;
+  border-radius: 0px;
+}
+.text-center {
+  text-align: center;
+}
+ion-toast.menu-swipe-message {
+  opacity: 0.8;
+  &::part(container) {
+    left: 0;
+    --border-radius: 0;
+    --width: 100%;
+    --max-width: 100%;
+    --height: 100%;
+    --max-height: 100%;
+    background-size: 150px 180px;
+    background-image: url("./assets/swipe.png");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+// .menu-swipe-message {
+//   opacity: 0.8;
+//   .toast-wrapper {
+//     left: 0;
+//     --border-radius: 0;
+//     --width: 100%;
+//     --max-width: 100%;
+//     --height: 100%;
+//     --max-height: 100%;
+//     background-size: 150px 180px;
+//     background-image: url("./assets/swipe.png");
+//     background-repeat: no-repeat;
+//     background-position: center;
+//   }
+// }
+.special-offers-modal {
+  --max-width: 85%;
+  --width: 85%;
+  --max-height: 20%;
+  --height: 20%;
+}
+.view-banner-modal {
+  --max-width: 100%;
+  --width: 100%;
+  --max-height: 65%;
+  --height: 65%;
+}
+.app-update-modal {
+  --width: 375px;
+  --height: 250px;
+}
+ion-modal {
+  --background: transparent !important;
+}

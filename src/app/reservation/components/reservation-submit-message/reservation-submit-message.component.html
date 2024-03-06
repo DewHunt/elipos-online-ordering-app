@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>
+        Thank you for making a reservation at
+        <ion-text color="tertiary">{{ shopName }}.</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-justify">
+      We will send you confirmation of your booking either by phone or email. If
+      the email does not appear in your Inbox, please check your Spam or Junk
+      folder. If you still have any problems, please contact {{ shopName }},
+      <ion-text color="tertiary">Thank You.</ion-text>
+      <ion-button expand="full" color="danger" (click)="closeModal()">
+        BACK
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

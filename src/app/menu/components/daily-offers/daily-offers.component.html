@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Special Offers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="dailySpecialOffers; else noSpecialOffers">
+    <ion-item lines="none" *ngIf="dailySpecialOffers.collectionOffers">
+      <ion-label class="ion-text-wrap ion-text-center">
+        {{ dailySpecialOffers.collectionOffers }}
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none" *ngIf="dailySpecialOffers.deliveryOffers">
+      <ion-label class="ion-text-wrap ion-text-center">
+        {{ dailySpecialOffers.deliveryOffers }}
+      </ion-label>
+    </ion-item>
+  </div>
+  <ng-template #noSpecialOffers>
+    <ion-item lines="none">
+      <ion-label class="ion-text-wrap ion-text-center">
+        We don't have any special offers at this moment.
+      </ion-label>
+    </ion-item>
+  </ng-template>
+</ion-content>

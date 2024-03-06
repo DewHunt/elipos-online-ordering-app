@@ -1,0 +1,36 @@
+<div class="modal-content ion-padding">
+  <div class="content-wrapper">
+    <div
+      class="header-close-button"
+      id="info-modal-header-close-btn"
+      (click)="dismiss()"
+    >
+      <!-- <ion-icon name="close"></ion-icon> -->
+    </div>
+
+    <h4 class="header-title" *ngIf="title">
+      {{ title }}
+    </h4>
+    <div class="text-content" *ngFor="let content of contents">
+      <p *ngIf="content.title" class="modal-sub-title">
+        {{ content.title }}
+      </p>
+      <p
+        [innerHTML]="paragraph"
+        class="modal-paragraph"
+        *ngFor="let paragraph of content.details"
+      ></p>
+    </div>
+    <div class="button-container" *ngIf="actionButtons?.length > 0">
+      <!-- <ion-button
+        (click)="actionButton.handler($event)"
+        *ngFor="let actionButton of actionButtons"
+        class="{{ actionButton.cssClass }}"
+        id="info-modal-action-btn"
+        [disabled]="actionButton.disabled ? actionButton.disabled : false"
+        expand="block"
+        >{{ actionButton.text }}
+      </ion-button> -->
+    </div>
+  </div>
+</div>

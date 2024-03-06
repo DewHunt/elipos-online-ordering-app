@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar class="ion-text-center">
+    <ion-title>Tip Your Delivery</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="8">
+        <ion-button
+          expand="block"
+          class="tips-btn common-btn"
+          (click)="withoutTipsAmount()"
+        >
+          Process Payment Without Tips
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button
+          color="danger"
+          expand="block"
+          class="tips-btn"
+          (click)="closeModal()"
+        >
+          Cancle
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngFor="let tips of tipsData">
+    <ion-card *ngIf="tips.status === '1'">
+      <ion-card-header>
+        <ion-card-title>
+          {{ tips.name }}&nbsp;&nbsp;{{ tips.amount | productPrice }}
+          <ion-button
+            color="danger"
+            fill="outline"
+            size="small"
+            class="tips-add-button"
+            (click)="withTipsAmount(tips.amount)"
+          >
+            <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+          </ion-button>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="tips-description">
+        {{ tips.description }}
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

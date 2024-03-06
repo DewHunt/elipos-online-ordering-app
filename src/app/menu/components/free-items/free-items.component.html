@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Order View</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list no-lines mode="md">
+    <span *ngFor="let cartFreeItem of cartFreeItems">
+      <ion-item (click)="removeFreeCartItem(cartFreeItem)" text-wrap>
+        <ion-label item-start text-wrap>
+          <h3>{{ cartFreeItem.item.name }}</h3>
+        </ion-label>
+        <ion-icon class="icon-remove" name="remove-circle" item-end></ion-icon>
+      </ion-item>
+    </span>
+
+    <ion-item *ngIf="showMessage" text-wrap>
+      <p>{{ showMessage }}</p>
+    </ion-item>
+
+    <span *ngFor="let product of products">
+      <ion-item
+        (click)="addFeeProductToCart(product)"
+        text-wrap
+        *ngIf="product.foodItemId !== currentProductId"
+      >
+        <ion-label item-start>
+          <h3>{{ product.foodItemName }}</h3>
+        </ion-label>
+        <ion-icon class="icon-add" name="add-circle" item-end></ion-icon>
+      </ion-item>
+    </span>
+    <span *ngFor="let subProduct of subProducts">
+      <ion-item
+        (click)="addFreeSubProductToCart(subProduct)"
+        *ngIf="subProduct.selectiveItemId !== currentSubProductId"
+      >
+        <ion-label item-start>
+          <h3>{{ subProduct.selectiveItemName }}</h3>
+        </ion-label>
+        <ion-icon class="icon-add" name="add-circle" item-end></ion-icon>
+      </ion-item>
+    </span>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="closeModal()">
+      Close
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

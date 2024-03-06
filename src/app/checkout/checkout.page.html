@@ -1,0 +1,296 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        default-href="#"
+        (click)="closeModal()"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>CHECKOUT</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="cartData.length">
+    <form [formGroup]="orderForm" (ngSubmit)="submitOrder()">
+      <ion-item lines="none" class="checkout-input">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>
+          {{ getFullName(userData.title,userData.first_name,userData.last_name)
+          }}
+        </ion-label>
+      </ion-item>
+
+      <ion-item lines="none" class="checkout-input">
+        <ion-icon name="mail-outline"></ion-icon>
+        <ion-label>{{ userData.email }}</ion-label>
+      </ion-item>
+
+      <ion-item lines="none" class="checkout-input">
+        <ion-icon name="phone-portrait-outline"></ion-icon>
+        <ion-input
+          type="text"
+          [(ngModel)]="userData.mobile"
+          placeholder="Mobile Number"
+          formControlName="mobile"
+        ></ion-input>
+      </ion-item>
+      <p class="error-text" *ngIf="!orderForm.controls['mobile'].valid">
+        Please enter mobile number
+      </p>
+
+      <ion-item lines="none" class="checkout-input">
+        <ion-label>{{ orderTypeTimeSelectionText }}</ion-label>
+        <ion-select
+          interface="popover"
+          name="delivery_time"
+          formControlName="delivery_time"
+        >
+          <ion-select-option
+            *ngFor="
+                let deliveryAndCollectionTimingOption of deliveryAndCollectionTimingOptions
+              "
+            [value]="deliveryAndCollectionTimingOption.value"
+            >{{ deliveryAndCollectionTimingOption.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <p
+        class="error-text"
+        *ngIf="
+            orderForm.controls['delivery_time'].invalid &&
+            deliveryAndCollectionTimingOptions.length > 0
+          "
+      >
+        Please select <span>{{ orderTypeTimeSelectionText }}</span>
+      </p>
+      <p
+        class="error-text"
+        *ngIf="deliveryAndCollectionTimingOptions.length === 0"
+      >
+        {{ orderTypeTimeSelectionText }}
+      </p>
+
+      <ion-radio-group
+        formControlName="order_type"
+        (ionChange)="showDiscountMessage()"
+      >
+        <div class="checkout-input">
+          <p class="radio-label">Please check you order type</p>
+          <ion-item
+            lines="none"
+            *ngIf="shopOrderType === 'collection' || shopOrderType === 'delivery_and_collection'"
+          >
+            <ion-radio value="collection" justify="start" labelPlacement="end">
+              Collection
+            </ion-radio>
+          </ion-item>
+          <ion-item
+            lines="none"
+            *ngIf="shopOrderType === 'delivery' || shopOrderType === 'delivery_and_collection'"
+          >
+            <ion-radio value="delivery" justify="start" labelPlacement="end">
+              Delivery
+            </ion-radio>
+          </ion-item>
+        </div>
+      </ion-radio-group>
+      <p
+        class="alert error-text"
+        *ngIf="orderForm.controls['order_type'].invalid"
+      >
+        Order type is required
+      </p>
+
+      <div class="delivery-details-block" [hidden]="showDeliveryDetailsBlock">
+        <ion-item lines="none" class="checkout-input">
+          <ion-textarea
+            rows="5"
+            type="textarea"
+            [(ngModel)]="userData.delivery_address_line_1"
+            placeholder="Delivery Address"
+            formControlName="delivery_address_line_1"
+          >
+          </ion-textarea>
+        </ion-item>
+        <p
+          class="error-text"
+          *ngIf="!orderForm.controls['delivery_address_line_1'].valid"
+        >
+          Please enter delivery address
+        </p>
+        <ion-item lines="none" class="checkout-input">
+          <ion-input
+            type="text"
+            [(ngModel)]="userData.delivery_postcode"
+            placeholder="Post code"
+            formControlName="delivery_postcode"
+          ></ion-input>
+        </ion-item>
+        <p
+          class="alert error-text"
+          *ngIf="!orderForm.controls['delivery_postcode'].valid"
+        >
+          {{ deliveryPostCodeAlertText }}
+        </p>
+      </div>
+
+      <ion-radio-group
+        formControlName="payment_method"
+        (ionChange)="showMessageForPaymentMethod()"
+      >
+        <div class="checkout-input">
+          <p class="radio-label">Please check order payment type</p>
+          <!-- Start Cash Payment Section -->
+          <ion-item
+            lines="none"
+            *ngIf="
+                settingsPaymentMethod === 'cash' ||
+                settingsPaymentMethod === 'both'
+              "
+          >
+            <ion-radio value="cash" justify="start" labelPlacement="end">
+              {{ getPaymentSystemLabel("Cash") }}
+            </ion-radio>
+          </ion-item>
+          <!-- End Cash Payment Section -->
+
+          <div
+            *ngIf="
+                settingsPaymentGateway &&
+                (settingsPaymentMethod === 'online' ||
+                  settingsPaymentMethod === 'both')
+              "
+          >
+            <!-- Start Paypal Payment Section -->
+            <ion-item
+              lines="none"
+              *ngIf="settingsPaymentGateway.indexOf('paypal') >= 0"
+            >
+              <ion-radio value="paypal" justify="start" labelPlacement="end">
+                {{ getPaymentSystemLabel("Paypal") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Paypal Payment Section -->
+
+            <!-- Start Stripe Payment Section -->
+            <ion-item
+              lines="none"
+              *ngIf="settingsPaymentGateway.indexOf('stripe') >= 0"
+            >
+              <ion-radio value="stripe" justify="start" labelPlacement="end">
+                {{ getPaymentSystemLabel("Stripe") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Stripe Payment Section -->
+
+            <!-- Start Sagepay Payment Section -->
+            <ion-item
+              lines="none"
+              *ngIf="settingsPaymentGateway.indexOf('sagepay') >= 0"
+            >
+              <ion-radio value="sagepay" justify="start" labelPlacement="end">
+                {{ getPaymentSystemLabel("Sagepay") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Sagepay Payment Section -->
+
+            <!-- Start Cardstream Payment Section -->
+            <ion-item
+              lines="none"
+              *ngIf="settingsPaymentGateway.indexOf('cardstream') >= 0"
+            >
+              <ion-radio
+                value="cardstream"
+                justify="start"
+                labelPlacement="end"
+              >
+                {{ getPaymentSystemLabel("Cardstream") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Cardstream Payment Section -->
+          </div>
+          <p
+            class="error-text"
+            *ngIf="orderForm.controls['payment_method'].invalid"
+          >
+            Payment type is required
+          </p>
+          <div *ngIf="orderForm.get('payment_method').value !== 'cash'">
+            <div *ngIf="cardFree > 0" class="surcharge-message">
+              Card Fee {{ cardFree | productPrice }} will be added
+            </div>
+          </div>
+          <div
+            class="stripe-block"
+            *ngIf="orderForm.get('payment_method').value === 'stripe'"
+          >
+            <h4>Enter payment details</h4>
+            <ngx-stripe-card
+              [options]="cardOptions"
+              [elementsOptions]="elementsOptions"
+            ></ngx-stripe-card>
+          </div>
+        </div>
+      </ion-radio-group>
+
+      <ion-item lines="none" class="checkout-input">
+        <ion-textarea
+          rows="5"
+          placeholder="Notes"
+          formControlName="notes"
+        ></ion-textarea>
+      </ion-item>
+
+      <ion-item lines="none" *ngIf="isCouponEnabled" class="checkout-input">
+        <ion-input
+          type="text"
+          placeholder="Coupon code"
+          [(ngModel)]="couponCodeText"
+          [ngModelOptions]="{ standalone: true }"
+        ></ion-input>
+        <ion-button
+          color="danger"
+          type="button"
+          [hidden]="!couponCodeText"
+          (click)="removeCouponCode()"
+        >
+          X
+        </ion-button>
+        <ion-button
+          color="tertiary"
+          type="button"
+          (click)="addCouponCode(couponCodeText)"
+        >
+          Add
+        </ion-button>
+      </ion-item>
+
+      <div [hidden]="submitted">
+        <ion-button
+          expand="full"
+          class="btn-process-order btn-confirm common-btn"
+          *ngIf="!isShopIsClosed; else shopCloseMessageBlock"
+          [disabled]="!orderForm.valid"
+          (click)="showTipsModal()"
+        >
+          Process Order
+        </ion-button>
+        <ng-template #shopCloseMessageBlock>
+          <ion-button
+            expand="full"
+            class="btn-process-order btn-confirm restaurant-closed common-btn"
+            [disabled]="!orderForm.valid"
+            (click)="showTipsModal()"
+          >
+            Process Pre-Order Your Takeaway
+          </ion-button>
+        </ng-template>
+      </div>
+    </form>
+  </div>
+</ion-content>

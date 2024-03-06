@@ -1,0 +1,260 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <form
+    *ngIf="reservationForm"
+    [formGroup]="reservationForm"
+    (ngSubmit)="submit()"
+  >
+    <div padding>
+      <h2 class="ion-text-center">Reservation Form</h2>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Full Name</ion-label>
+        <ion-input
+          type="text"
+          placeholder="Full Name"
+          [(ngModel)]="userName"
+          formControlName="name"
+          name="name"
+        ></ion-input>
+      </ion-item>
+      <p class="error-alert" *ngIf="reservationForm.controls['name'].invalid">
+        Name is required
+      </p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input
+          type="email"
+          placeholder="Email"
+          [(ngModel)]="userInfo.email"
+          formControlName="email"
+          name="email"
+        ></ion-input>
+      </ion-item>
+      <p class="error-alert" *ngIf="reservationForm.controls['email'].invalid">
+        Email is required
+      </p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Phone</ion-label>
+        <ion-input
+          type="mobile"
+          placeholder="Phone"
+          [(ngModel)]="userInfo.mobile"
+          formControlName="mobile"
+          name="mobile"
+        ></ion-input>
+      </ion-item>
+      <p class="error-alert" *ngIf="reservationForm.controls['mobile'].invalid">
+        Mobile number is required
+      </p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Date</ion-label>
+        <ion-input
+          type="date"
+          displayFormat="yyyy-mm-dd"
+          placeholder="yyyy-mm-dd"
+          min="{{ minReservationDate }}"
+          [(ngModel)]="currentDate"
+          formControlName="reservation_date"
+          name="reservation_date"
+          (ionChange)="checkValidDate()"
+        >
+        </ion-input>
+      </ion-item>
+      <p
+        class="error-alert"
+        *ngIf="reservationForm.controls['reservation_date'].invalid"
+      >
+        Date is required
+      </p>
+      <p class="error-alert" *ngIf="isDateInvalid">{{ dateInvalidMessage }}</p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Time</ion-label>
+        <ion-input
+          type="time"
+          displayFormat="H:mm"
+          placeholder="--:--"
+          [(ngModel)]="currentTime"
+          formControlName="start_time"
+          name="start_time"
+          min="{{ minTime }}"
+          max="{{ maxTime }}"
+          (ionChange)="checkValidTime()"
+        ></ion-input>
+      </ion-item>
+      <p
+        class="error-alert"
+        *ngIf="reservationForm.controls['start_time'].invalid"
+      >
+        Start Time is required
+      </p>
+      <p class="error-alert" *ngIf="isTimeInvalid">{{ timeInvalidMessage }}</p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Number of guest</ion-label>
+        <ion-input
+          type="number"
+          placeholder="Number of guest"
+          formControlName="number_of_guest"
+          name="number_of_guest"
+        ></ion-input>
+      </ion-item>
+      <p
+        class="error-alert"
+        *ngIf="reservationForm.controls['number_of_guest'].invalid"
+      >
+        Number of guest is required
+      </p>
+
+      <ion-item class="common-input" lines="none">
+        <ion-label position="floating">Notes</ion-label>
+        <ion-textarea
+          placeholder="Notes"
+          formControlName="booking_purpose"
+          name="booking_purpose"
+        ></ion-textarea>
+      </ion-item>
+
+      <div *ngIf="isReservationPaymentAvailable === false">
+        <ion-row lines="none">
+          <ion-col size="12">Captcha</ion-col>
+          <ion-col size="9">
+            <div class="captcha-string">{{randomString}}</div>
+          </ion-col>
+          <ion-col size="3">
+            <ion-button
+              color="danger"
+              size="large"
+              expand="full"
+              class="refresh-btn"
+              (click)="refreshCaptcha()"
+            >
+              <ion-icon name="refresh-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-item class="common-input" lines="none">
+          <ion-input
+            label="Enter Captcha Text"
+            labelPlacement="floating"
+            placeholder="Enter Captcha Text"
+            formControlName="captchaText"
+            name="captchaText"
+            (ionInput)="checkCaptcha($event)"
+          ></ion-input>
+        </ion-item>
+        <p
+          class="error-alert"
+          *ngIf="reservationForm.controls['captchaText'].invalid && isReservationPaymentAvailable === false"
+        >
+          Captcha is required
+        </p>
+        <p
+          class="error-alert"
+          *ngIf="reservationForm.controls['captchaText'].valid && isCaptchaMatched === false && isReservationPaymentAvailable === false"
+        >
+          Captcha doesn't matched.
+        </p>
+        <p
+          class="success-alert"
+          *ngIf="reservationForm.controls['captchaText'].valid && isCaptchaMatched === true && isReservationPaymentAvailable === false"
+        >
+          Captcha matched.
+        </p>
+      </div>
+
+      <div class="checkout-input" *ngIf="isReservationPaymentAvailable">
+        <div class="payment-text">
+          To reservation you have to pay {{reservationAmount | productPrice}}
+        </div>
+        <ion-radio-group formControlName="payment_method">
+          <p class="radio-label">Please check order payment type</p>
+          <div
+            *ngIf="
+                  settingsPaymentGateway &&
+                  (settingsPaymentMethod === 'online' ||
+                    settingsPaymentMethod === 'both')
+                "
+          >
+            <!-- Start Stripe Payment Section -->
+            <ion-item lines="none" *ngIf="selectedPaymentGateway === 'stripe'">
+              <ion-radio value="stripe" justify="start" labelPlacement="end">
+                {{ getPaymentSystemLabel("stripe") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Stripe Payment Section -->
+
+            <!-- Start Sagepay Payment Section -->
+            <ion-item lines="none" *ngIf="selectedPaymentGateway === 'sagepay'">
+              <ion-radio value="sagepay" justify="start" labelPlacement="end">
+                {{ getPaymentSystemLabel("Sagepay") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Sagepay Payment Section -->
+
+            <!-- Start Cardstream Payment Section -->
+            <ion-item
+              lines="none"
+              *ngIf="selectedPaymentGateway === 'cardstream'"
+            >
+              <ion-radio
+                value="cardstream"
+                justify="start"
+                labelPlacement="end"
+              >
+                {{ getPaymentSystemLabel("Cardstream") }}
+              </ion-radio>
+            </ion-item>
+            <!-- End Cardstream Payment Section -->
+          </div>
+          <p
+            class="error-alert"
+            *ngIf="reservationForm.controls['payment_method'].invalid"
+          >
+            Payment type is required
+          </p>
+          <p
+            *ngIf="reservationForm.get('payment_method').value !== 'cash' && cardFee > 0"
+            class="surcharge-message"
+          >
+            Card Fee {{ cardFee | productPrice }} will be added
+          </p>
+        </ion-radio-group>
+
+        <div class="stripe-block" *ngIf="selectedPaymentGateway === 'stripe'">
+          <h5>Enter payment details</h5>
+          <ngx-stripe-card
+            [options]="cardOptions"
+            [elementsOptions]="elementsOptions"
+          ></ngx-stripe-card>
+        </div>
+      </div>
+
+      <ion-button
+        class="common-btn"
+        expand="full"
+        type="submit"
+        [disabled]="reservationForm.invalid || isTimeInvalid || isDateInvalid || !isCaptchaMatched"
+      >
+        SUBMIT
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

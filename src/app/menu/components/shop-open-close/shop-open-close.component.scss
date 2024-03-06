@@ -1,0 +1,15 @@
+.msg-content {
+  padding: 8px;
+  text-align: center;
+  .msg-body {
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 25px;
+    color: #ff0000;
+    // border: 1px solid #ff0000;
+    border-radius: 5px;
+  }
+  .msg-btn {
+    margin-top: 5px;
+  }
+}

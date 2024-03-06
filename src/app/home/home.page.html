@@ -1,0 +1,102 @@
+<ion-content [style.background-image]="'url('+backgroundImage+')'">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="isTopImageShow && topImage" class="top-image-container">
+    <img src="{{ topImage }}" class="top-image" />
+  </div>
+
+  <div *ngIf="isLogoImageShow && logoImage" class="logo-image-container">
+    <img src="{{ logoImage }}" class="logo-image" />
+  </div>
+
+  <div *ngIf="sliderImages.length > 0 && isSliderShow">
+    <swiper-container
+      [modules]="swiperModules"
+      centeredSlides="true"
+      [spaceBetween]="20"
+      autoplay="true"
+      loop="true"
+      [pagination]="{clickable: true,dynamicBullets: true}"
+    >
+      <swiper-slide *ngFor="let slideImg of sliderImages">
+        <img [src]="slideImg" />
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+  <div class="shop-timing" *ngIf="openCloseTimeText">
+    {{ openCloseTimeText }}
+  </div>
+
+  <div *ngFor="let p of pagesForHomePage; let i = index">
+    <div class="btn-navigation">
+      <ion-button (click)="openPage(p)" [style.color]="p.btnColor">
+        <img
+          src="{{ webUrl }}{{p.homeIconImagePath}}"
+          alt=""
+          class="left-side-img-icon"
+          *ngIf="isHomeImageIconShow && homeIconImageSide === 'left'"
+        />
+        <span class="btn-text">{{ p.title }}</span>
+        <img
+          src="{{ webUrl }}{{p.homeIconImagePath}}"
+          alt=""
+          class="right-side-img-icon"
+          *ngIf="isHomeImageIconShow && homeIconImageSide === 'right'"
+        />
+        <ion-icon
+          slot="end"
+          name="chevron-forward-sharp"
+          *ngIf="isChevronIcon"
+        ></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="ion-text-center">
+    <ion-buttons [class.icon-btns]="isMenuButtonShow === false">
+      <ion-button
+        class="icon-btn"
+        (click)="callRestaurant()"
+        *ngIf="contactNumber"
+      >
+        <img src="assets/imgs/footer-icon/phone-call.svg" class="icon" />
+      </ion-button>
+      <ion-button
+        class="icon-btn"
+        (click)="showSocialMedia('facebook')"
+        *ngIf="socialMediaLinks?.facebook"
+      >
+        <img src="assets/imgs/footer-icon/facebook.svg" class="icon" />
+      </ion-button>
+      <ion-button
+        class="icon-btn"
+        (click)="showSocialMedia('instagram')"
+        *ngIf="socialMediaLinks?.instagram"
+      >
+        <img src="assets/imgs/footer-icon/instagram.svg" class="icon" />
+      </ion-button>
+      <ion-button
+        class="icon-btn"
+        (click)="showSocialMedia('tripadvisor')"
+        *ngIf="socialMediaLinks?.tripadvisor"
+      >
+        <img src="assets/imgs/footer-icon/tripadvisor.svg" class="icon" />
+      </ion-button>
+      <ion-button
+        class="icon-btn"
+        (click)="showSocialMedia('googlePlus')"
+        *ngIf="socialMediaLinks?.googlePlus"
+      >
+        <img src="assets/imgs/footer-icon/map-marker.svg" class="icon" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" [class.hide-menu-btn]="isMenuButtonShow === false">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

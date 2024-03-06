@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="login-panel" class="ion-text-center">
+  <div class="auth-page-head">
+    <div class="title">{{ shopName }}</div>
+    <div class="sub-title">Sign in with your email</div>
+  </div>
+
+  <form
+    class="ion-text-center"
+    *ngIf="loginForm"
+    [formGroup]="loginForm"
+    (ngSubmit)="login()"
+  >
+    <ion-item class="common-input" lines="none">
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-input
+        type="email"
+        placeholder="Enter Your Email"
+        [clearInput]="true"
+        [(ngModel)]="loginData.email"
+        formControlName="email"
+        name="email"
+      ></ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!loginForm.controls['email'].valid && loginForm.controls['email'].touched"
+    >
+      Please enter a valid email.
+    </p>
+    <ion-item class="common-input" lines="none">
+      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+      <ion-input
+        type="password"
+        placeholder="Enter Your Password"
+        [clearInput]="true"
+        [(ngModel)]="loginData.password"
+        formControlName="password"
+        name="password"
+      >
+      </ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+    >
+      Please enter your password.
+    </p>
+    <ion-button
+      expand="full"
+      type="submit"
+      class="common-btn"
+      [disabled]="!loginForm.valid"
+    >
+      Sign In
+    </ion-button>
+  </form>
+  <div *ngIf="loginMessage">
+    <p clear="login-message" class="error-alert" text-center>
+      {{ loginMessage }}
+    </p>
+  </div>
+
+  <ion-item lines="none" (click)="goSignUpPage()" class="signup-manually-link">
+    <ion-label>
+      Don't have a account?&nbsp;<span>Sign Up Manually</span>
+    </ion-label>
+  </ion-item>
+
+  <ion-item
+    lines="none"
+    (click)="goToPasswordRecoveryPage()"
+    class="forgot-password-link"
+  >
+    <ion-label>
+      <span>Forgot Password?</span>
+    </ion-label>
+  </ion-item>
+</ion-content>

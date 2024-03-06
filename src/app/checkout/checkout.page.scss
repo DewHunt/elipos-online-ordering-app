@@ -1,0 +1,47 @@
+.checkout-input {
+  border: 2px solid #79797a;
+  border-radius: 5px;
+  margin: 5px 5px;
+  .radio-label {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    margin-left: 10px;
+  }
+  ion-radio {
+    margin-right: 5px;
+  }
+  ion-icon {
+    margin-right: 5px;
+  }
+}
+.error-text {
+  color: #ff0000;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.card-error-text {
+  color: #ff0000;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 22px;
+  margin-right: 22px;
+}
+.surcharge-message {
+  color: #008000;
+  margin-left: 10px;
+  font-weight: bold;
+}
+.cardBlock {
+  display: block;
+  box-shadow: 2px 2px 2px 1px gray;
+  position: relative;
+  top: 0px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.stripe-block {
+  margin: 5px 5px 15px 5px;
+}

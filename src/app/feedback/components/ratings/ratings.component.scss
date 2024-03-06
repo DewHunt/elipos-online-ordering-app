@@ -1,0 +1,12 @@
+.ratings {
+  [ion-button][disabled] {
+    opacity: 1;
+    background: none;
+  }
+  ion-icon.normal {
+    color: #fc3a5b;
+  }
+  ion-icon.star-outline {
+    color: grey;
+  }
+}

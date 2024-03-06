@@ -1,0 +1,518 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons *ngIf="isSpecialOfferBtn && isHasAnyOffers" slot="end">
+      <div class="cont">
+        <ion-button class="sf-button" (click)="openDailySpecialOffer()">
+          <div class="text">
+            <p>S</p>
+            <p>p</p>
+            <p>e</p>
+            <p>c</p>
+            <p>i</p>
+            <p>a</p>
+            <p>l</p>
+            <p>&nbsp;</p>
+            <p>O</p>
+            <p>f</p>
+            <p>f</p>
+            <p>e</p>
+            <p>r</p>
+            <p>s</p>
+            <p>!</p>
+          </div>
+        </ion-button>
+      </div>
+    </ion-buttons>
+    <ion-title>MENU</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="categories">
+    <ion-searchbar
+      mode="ios"
+      show-clear-button="always"
+      color="light"
+      (ionInput)="search($event)"
+    ></ion-searchbar>
+    <!-- Searched Product -->
+    <div *ngIf="isShowSearchedProduct">
+      <div
+        *ngFor="let searchProduct of searchableProductLists; let rowIndex = index;"
+      >
+        <div *ngIf="searchProduct.isDealProduct">
+          <ion-row class="deals-product">
+            <ion-col size="8" style="text-align: left">
+              <h6 class="deals-product-title">{{ searchProduct.title }}</h6>
+            </ion-col>
+            <ion-col size="3" class="ion-text-end">
+              <h6
+                (click)="addDealToCart($event,searchProduct,searchProduct.dealsCategory)"
+                class="price-text"
+              >
+                {{ searchProduct.price| productPrice }}
+              </h6>
+            </ion-col>
+            <ion-col size="1" class="ion-text-end">
+              <h6
+                (click)="addDealToCart($event, searchProduct,searchProduct.dealsCategory)"
+                class="product-icon"
+                [hidden]="!isOrderEnabled"
+              >
+                <ion-icon class="plus-icon" name="add-outline"></ion-icon>
+              </h6>
+            </ion-col>
+            <ion-col size="12" class="ion-text-start">
+              <p class="deals-description">{{ searchProduct.description }}</p>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div *ngIf="!searchProduct.isDealProduct">
+          <ion-row
+            *ngIf="!searchProduct.has_sub_product"
+            class="product ng-enter ng-enter-stagger"
+          >
+            <ion-col size="8" class="ion-text-start">
+              <h6 class="product-title">{{ searchProduct.foodItemName }}</h6>
+            </ion-col>
+            <ion-col size="3" class="ion-text-end">
+              <h6
+                type="button"
+                (click)="addProductToCart($event, searchProduct,searchProduct.category)"
+                class="price-text"
+              >
+                {{ searchProduct.takeawayPrice | productPrice }}
+              </h6>
+            </ion-col>
+            <ion-col size="1" class="ion-text-center">
+              <h6
+                (click)="addProductToCart($event, searchProduct,searchProduct.category)"
+                class="product-icon"
+                [hidden]="!isOrderEnabled"
+              >
+                <ion-icon class="plus-icon" name="add-outline"></ion-icon>
+              </h6>
+            </ion-col>
+            <ion-col size="12" class="ion-text-start">
+              <p class="product-description">{{ searchProduct.description }}</p>
+            </ion-col>
+          </ion-row>
+
+          <!-- Start Sub Product -->
+          <div *ngIf="searchProduct.has_sub_product">
+            <ion-row class="product even">
+              <ion-col size="10" class="ion-text-start">
+                <h6 text-wrap class="product-title">
+                  {{ searchProduct.foodItemName }}
+                </h6>
+              </ion-col>
+              <ion-col size="2" class="ion-text-end">
+                <h6
+                  (click)="subProductBlockToggle(searchProduct.foodItemId)"
+                  class="product-icon"
+                >
+                  <ion-icon
+                    class="iconToggle"
+                    name="chevron-forward-outline"
+                  ></ion-icon>
+                </h6>
+              </ion-col>
+              <ion-col size="12" class="ion-text-start">
+                <p class="product-description">
+                  {{ searchProduct.description }}
+                </p>
+              </ion-col>
+            </ion-row>
+            <div
+              class="{{ searchProduct.foodItemId }} even sub-product-block"
+              style="display: none"
+            >
+              <ion-row
+                *ngFor="let searchSubProduct of searchProduct.sub_products"
+                class="sub-product"
+              >
+                <ion-col size="8" class="ion-text-start">
+                  <h6 class="sub-product-title">
+                    {{ searchSubProduct.selectiveItemName }}
+                  </h6>
+                </ion-col>
+                <ion-col size="3" class="ion-text-end">
+                  <h6
+                    type="button"
+                    (click)="subProductAddToCartModal($event, searchProduct,searchSubProduct,searchProduct.category)"
+                    class="price-text"
+                  >
+                    {{ searchSubProduct.takeawayPrice | productPrice }}
+                  </h6>
+                </ion-col>
+                <ion-col size="1" class="ion-text-end">
+                  <h6
+                    type="button"
+                    (click)="subProductAddToCartModal($event, searchProduct,searchSubProduct,searchProduct.category)"
+                    class="product-icon"
+                    [hidden]="!isOrderEnabled"
+                  >
+                    <ion-icon class="plus-icon" name="add-outline"></ion-icon>
+                  </h6>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <!-- End Sub Product -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Non Searched Product -->
+    <div *ngIf="!isShowSearchedProduct">
+      <!-- Category Dropdown -->
+      <ion-list>
+        <ion-item class="category-select-option">
+          <ion-select
+            [interfaceOptions]="categorySelectOptions"
+            interface="action-sheet"
+            placeholder="Select A Category"
+            value="{{ selectedCategory }}"
+            (ionChange)="changeCategoryEvent($event)"
+            *ngIf="dealsCategories"
+          >
+            <ion-select-option value="0">{{ dealsName }}</ion-select-option>
+            <ion-select-option
+              *ngFor="let category of categories let i = index;"
+              value="{{ i + 1 }}"
+            >
+              {{ category.categoryName }}
+            </ion-select-option>
+          </ion-select>
+          <ion-select
+            [interfaceOptions]="categorySelectOptions"
+            interface="action-sheet"
+            placeholder="Select A Category"
+            value="{{ selectedCategory }}"
+            (ionChange)="changeCategoryEvent($event)"
+            *ngIf="dealsCategories === null"
+          >
+            <ion-select-option
+              *ngFor="let category of categories let i = index;"
+              value="{{ i }}"
+            >
+              {{ category.categoryName }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <!-- Product Swiper -->
+      <swiper-container #swiper (slidechange)="slideChanged()">
+        <swiper-slide *ngIf="dealsCategories">
+          <ion-grid>
+            <div class="btn-category slideButton">
+              <ion-row class="slide-row">
+                <ion-col size="2" class="ion-text-start">
+                  <ion-icon
+                    class="nav-icon nav-icon-left"
+                    name="chevron-back-circle-outline"
+                    (click)="changeSlideAsOption(0)"
+                    [class.slide-icon-disable]="isFirstSlide === true"
+                  ></ion-icon>
+                </ion-col>
+                <ion-col size="8" class="ion-text-center">
+                  <div class="title-text">{{ dealsName }}</div>
+                </ion-col>
+                <ion-col size="2" class="ion-text-right">
+                  <ion-icon
+                    class="nav-icon nav-icon-right"
+                    name="chevron-forward-circle-outline"
+                    (click)="changeSlideAsOption(1)"
+                    [class.slide-icon-disable]="isLastSlide === true"
+                  ></ion-icon>
+                </ion-col>
+              </ion-row>
+            </div>
+            <!-- Deals Category Start -->
+            <div class="product-content-block">
+              <div
+                *ngFor="let dealsCategory of dealsCategories; let rowIndex = index;"
+              >
+                <div *ngIf="dealsCategory.isDeals">
+                  <ion-row class="product even">
+                    <ion-col size="10" class="ion-text-start">
+                      <h6
+                        (click)="subProductBlockToggle('cate-'+dealsCategory.categoryId)"
+                        class="deals-title"
+                      >
+                        {{ dealsCategory.categoryName }}
+                      </h6>
+                    </ion-col>
+                    <ion-col size="2" class="ion-text-end">
+                      <h6
+                        (click)="subProductBlockToggle('cate-'+dealsCategory.categoryId)"
+                        class="product-icon"
+                      >
+                        <ion-icon
+                          class="iconToggle"
+                          name="chevron-forward-outline"
+                        ></ion-icon>
+                      </h6>
+                    </ion-col>
+                  </ion-row>
+
+                  <div
+                    class="cate-{{ dealsCategory.categoryId }} even"
+                    style="display: none"
+                  >
+                    <ion-row
+                      *ngFor="let deal of dealsCategory.deals"
+                      class="deals-product"
+                    >
+                      <ion-col size="8" style="text-align: left">
+                        <h6 class="deals-product-title">{{ deal.title }}</h6>
+                      </ion-col>
+                      <ion-col size="3" class="ion-text-end">
+                        <h6
+                          (click)="addDealToCart($event, deal,dealsCategory)"
+                          class="price-text"
+                        >
+                          {{ deal.price| productPrice }}
+                        </h6>
+                      </ion-col>
+                      <ion-col size="1" class="ion-text-end">
+                        <h6
+                          (click)="addDealToCart($event, deal,dealsCategory)"
+                          class="product-icon"
+                          [hidden]="!isOrderEnabled"
+                        >
+                          <ion-icon
+                            class="plus-icon"
+                            name="add-outline"
+                          ></ion-icon>
+                        </h6>
+                      </ion-col>
+                      <ion-col size="12" class="ion-text-start">
+                        <p class="deals-description">{{ deal.description }}</p>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-grid>
+          <!-- Deals Category End -->
+        </swiper-slide>
+
+        <swiper-slide *ngFor="let category of categories let i = index;">
+          <ion-grid>
+            <span *ngIf="dealsCategories; else normalCategorySlideOption">
+              <div class="btn-category slideButton">
+                <ion-row class="slide-row">
+                  <ion-col size="2" class="ion-text-start">
+                    <ion-icon
+                      class="nav-icon nav-icon-left"
+                      name="chevron-back-circle-outline"
+                      (click)="changeSlideAsOption((i+1)-1)"
+                      [class.slide-icon-disable]="isFirstSlide"
+                    ></ion-icon>
+                  </ion-col>
+                  <ion-col size="8" class="ion-text-center">
+                    <div class="category-name title-text">
+                      {{ category.categoryName }}
+                    </div>
+                  </ion-col>
+                  <ion-col size="2" class="ion-text-end">
+                    <ion-icon
+                      class="nav-icon nav-icon-right"
+                      name="chevron-forward-circle-outline"
+                      (click)="changeSlideAsOption((i+1)+1)"
+                      [class.slide-icon-disable]="isLastSlide"
+                    ></ion-icon>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </span>
+
+            <ng-template #normalCategorySlideOption>
+              <div class="btn-category slideButton">
+                <ion-row class="slide-row">
+                  <ion-col size="2" class="ion-text-start">
+                    <ion-icon
+                      class="nav-icon nav-icon-left"
+                      name="chevron-back-circle-outline"
+                      (click)="changeSlideAsOption(i-1)"
+                      [class.slide-icon-disable]="isFirstSlide"
+                    ></ion-icon>
+                  </ion-col>
+                  <ion-col size="8" class="ion-text-center">
+                    <div class="category-name title-text">
+                      {{ category.categoryName }}
+                    </div>
+                  </ion-col>
+                  <ion-col size="2" class="ion-text-end">
+                    <ion-icon
+                      class="nav-icon nav-icon-right"
+                      name="chevron-forward-circle-outline"
+                      (click)="changeSlideAsOption(i+1)"
+                      [class.slide-icon-disable]="isLastSlide"
+                    ></ion-icon>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ng-template>
+
+            <div *ngIf="category.isDeals === '0'" class="product-content-block">
+              <div
+                *ngFor="let product of category.products; let rowIndex = index;"
+              >
+                <ion-row
+                  *ngIf="!product.has_sub_product"
+                  class="product ng-enter ng-enter-stagger"
+                >
+                  <ion-col size="8" class="ion-text-start">
+                    <h6 class="product-title">{{ product.foodItemName }}</h6>
+                  </ion-col>
+                  <ion-col size="3" class="ion-text-end">
+                    <h6
+                      type="button"
+                      (click)="addProductToCart($event, product,category)"
+                      class="price-text"
+                    >
+                      {{ product.takeawayPrice | productPrice }}
+                    </h6>
+                  </ion-col>
+                  <ion-col size="1" class="ion-text-center">
+                    <h6
+                      (click)="addProductToCart($event, product,category)"
+                      class="product-icon"
+                      [hidden]="!isOrderEnabled"
+                    >
+                      <ion-icon class="plus-icon" name="add-outline"></ion-icon>
+                    </h6>
+                  </ion-col>
+                  <ion-col size="12" class="ion-text-start">
+                    <p class="product-description">{{ product.description }}</p>
+                  </ion-col>
+                </ion-row>
+
+                <!-- Start Sub Product -->
+                <div *ngIf="product.has_sub_product">
+                  <ion-row class="product even">
+                    <ion-col size="10" class="ion-text-start">
+                      <h6
+                        text-wrap
+                        (click)="subProductBlockToggle(product.foodItemId)"
+                        class="product-title"
+                      >
+                        {{ product.foodItemName }}
+                      </h6>
+                    </ion-col>
+                    <ion-col size="2" class="ion-text-end">
+                      <h6
+                        (click)="subProductBlockToggle(product.foodItemId)"
+                        class="product-icon"
+                      >
+                        <ion-icon
+                          class="iconToggle"
+                          name="chevron-forward-outline"
+                        ></ion-icon>
+                      </h6>
+                    </ion-col>
+                    <ion-col size="12" class="ion-text-start">
+                      <p class="product-description">
+                        {{ product.description }}
+                      </p>
+                    </ion-col>
+                  </ion-row>
+                  <div
+                    class="{{ product.foodItemId }} even sub-product-block"
+                    style="display: none"
+                  >
+                    <ion-row
+                      *ngFor="let sub_product of product.sub_products"
+                      class="sub-product"
+                    >
+                      <ion-col size="8" class="ion-text-start">
+                        <h6 class="sub-product-title">
+                          {{ sub_product.selectiveItemName }}
+                        </h6>
+                      </ion-col>
+                      <ion-col size="3" class="ion-text-end">
+                        <h6
+                          type="button"
+                          (click)="subProductAddToCartModal($event, product,sub_product,category)"
+                          class="price-text"
+                        >
+                          {{ sub_product.takeawayPrice| productPrice }}
+                        </h6>
+                      </ion-col>
+                      <ion-col size="1" class="ion-text-end">
+                        <h6
+                          type="button"
+                          (click)="subProductAddToCartModal($event, product,sub_product,category)"
+                          class="product-icon"
+                          [hidden]="!isOrderEnabled"
+                        >
+                          <ion-icon
+                            class="plus-icon"
+                            name="add-outline"
+                          ></ion-icon>
+                        </h6>
+                      </ion-col>
+                      <ion-col size="12" class="ion-text-start">
+                        <p class="sub-product-description">
+                          {{ sub_product.selection_item_description }}
+                        </p>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+                <!-- End Sub Product -->
+              </div>
+            </div>
+          </ion-grid>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer #amountFooter style="margin: 0">
+  <ion-toolbar>
+    <div (click)="goToCart()">
+      <ion-row class="charges-row">
+        <ion-col size="12" class="ion-text-end" *ngIf="discountAmount > 0">
+          <h5>Discount - {{ discountAmount | productPrice }}</h5>
+        </ion-col>
+        <ion-col size="12" class="ion-text-end" *ngIf="serviceCharge > 0">
+          <h5>Service Charge - {{ serviceCharge | productPrice }}</h5>
+        </ion-col>
+        <ion-col size="12" class="ion-text-end" *ngIf="packagingCharge > 0">
+          <h5>Parcel Box - {{ packagingCharge | productPrice }}</h5>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <img
+            class="footer-menu-logo"
+            src="assets/menu_icon_white_black.png"
+          />
+        </ion-col>
+        <ion-col size="7">
+          <h5>VIEW YOUR ORDER</h5>
+        </ion-col>
+        <ion-col size="3" class="ion-text-end">
+          <h5>
+            {{ (totalAmount + serviceCharge + packagingCharge) - (discountAmount
+            + cartTotalBuyGetAmount) | productPrice }}
+          </h5>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,32 @@
+Keystore password:Giantssoft2017
+Alias: my-alias
+
+
+What is your first and last name?
+  [Unknown]:  Elipos Systems
+What is the name of your organizational unit?
+  [Unknown]:  Elipos
+What is the name of your organization?
+  [Unknown]:  Elipos
+What is the name of your City or Locality?
+  [Unknown]:  UK
+What is the name of your State or Province?
+  [Unknown]:  Walsall
+What is the two-letter country code for this unit?
+  [Unknown]:  UK
+Is CN=Elipos Systems, OU=Elipos, O=Elipos, L=UK, ST=Walsall, C=UK correct?
+  [no]:  y
+
+App Name: Elipos Demo
+Short Descrioption: Online food order apps.
+Long Description: Useful features include:
+– Dynamic Menu Update 
+– Dynamic Offers or deals handling  
+– Optional Extras
+– Delivery Distance
+– Select to pay by cash on delivery/collection
+– Payment with Stripe and PayPal.
+– Reservation System.
+– Dynamic Gallery Content
+– Pre-Order Enabled.
+– Push Notifications using Firebase.

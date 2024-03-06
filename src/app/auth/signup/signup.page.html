@@ -1,0 +1,167 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        default-href="#"
+        (click)="gotoLoginPage()"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding id="signUp-panel">
+  <div class="auth-page-head">
+    <div class="title">{{ shopName }}</div>
+    <div class="sub-title">Create Account</div>
+  </div>
+  <form [formGroup]="registrationForm" (ngSubmit)="registration()">
+    <ion-item class="common-input" lines="none">
+      <ion-select
+        label="Title"
+        labelPlacement="floating"
+        placeholder="Select Title"
+        formControlName="title"
+      >
+        <ion-select-option value="Mr.">Mr.</ion-select-option>
+        <ion-select-option value="Mrs.">Mrs.</ion-select-option>
+        <ion-select-option value="Miss">Miss</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="text"
+        label="First Name"
+        labelPlacement="floating"
+        placeholder="Enter First Name"
+        formControlName="first_name"
+      ></ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!registrationForm.controls['first_name'].valid && registrationForm.controls['first_name'].touched"
+    >
+      Please enter your first name.
+    </p>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="text"
+        label="Last Name"
+        labelPlacement="floating"
+        placeholder="Enter Last Name"
+        formControlName="last_name"
+      ></ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!registrationForm.controls['last_name'].valid && registrationForm.controls['last_name'].touched"
+    >
+      Please enter your last name.
+    </p>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="email"
+        label="Email *"
+        labelPlacement="floating"
+        placeholder="Enter Email"
+        [(ngModel)]="loginData.email"
+        formControlName="email"
+      ></ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!registrationForm.controls['email'].valid && registrationForm.controls['email'].touched"
+    >
+      Please enter valid email address.
+    </p>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="text"
+        label="Mobile Number"
+        labelPlacement="floating"
+        placeholder="Enter Mobile Number"
+        formControlName="mobile"
+      ></ion-input>
+    </ion-item>
+    <p
+      class="error-alert"
+      *ngIf="!registrationForm.controls['mobile'].valid && registrationForm.controls['mobile'].touched"
+    >
+      Please enter your mobile number.
+    </p>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="text"
+        label="Postcode"
+        labelPlacement="floating"
+        placeholder="Enter Postcode"
+        formControlName="post_code"
+      >
+      </ion-input>
+    </ion-item>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="password"
+        label="Password *"
+        labelPlacement="floating"
+        placeholder="Enter Password"
+        [(ngModel)]="loginData.password"
+        formControlName="password"
+      ></ion-input>
+    </ion-item>
+    <div
+      *ngIf="registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched"
+    >
+      <div *ngIf="registrationForm.controls['password'].errors['required']">
+        <p class="error-alert">Password is required.</p>
+      </div>
+      <div *ngIf="registrationForm.controls['password'].errors['minlength']">
+        <p class="error-alert">Password must be at least 5 characters long.</p>
+      </div>
+    </div>
+
+    <ion-item class="common-input" lines="none">
+      <ion-input
+        type="password"
+        label="Confirm Password *"
+        labelPlacement="floating"
+        placeholder="Enter Password Again"
+        formControlName="confirmPassword"
+      ></ion-input>
+    </ion-item>
+    <div *ngIf="registrationForm.controls['confirmPassword'].dirty">
+      <div *ngIf="registrationForm.controls['password'].errors">
+        <p class="error-alert">Please enter password first.</p>
+      </div>
+      <div *ngIf="!registrationForm.controls['password'].errors">
+        <p
+          class="error-alert"
+          *ngIf="!registrationForm.errors['matchPassword'] && registrationForm.controls['confirmPassword'].dirty"
+        >
+          Password is not matching.
+        </p>
+        <p
+          class="success-alert"
+          *ngIf="registrationForm.errors['matchPassword'] && registrationForm.controls['confirmPassword'].dirty"
+        >
+          Password is matched.
+        </p>
+      </div>
+    </div>
+
+    <ion-button
+      type="submit"
+      expand="full"
+      class="btn-sign-up common-btn"
+      [disabled]="!registrationForm.valid && !registrationForm.errors['matchPassword']"
+    >
+      Sign Up
+    </ion-button>
+  </form>
+</ion-content>

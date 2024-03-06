@@ -1,0 +1,23 @@
+.date {
+  font-size: 75%;
+}
+.time {
+  font-size: 75%;
+}
+.notification-card {
+  border: 2px solid #0f0f0f;
+  background: #fee9cc;
+  .message {
+    color: #000000;
+    font-size: 95%;
+    text-align: justify;
+  }
+  .title {
+    text-align: center;
+    color: #000000;
+  }
+}
+.image-container {
+  background-size: 100% 100%;
+  min-height: 315px;
+}

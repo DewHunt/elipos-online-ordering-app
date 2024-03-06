@@ -1,0 +1,15 @@
+.icon-add {
+  color: var(--color-2);
+  width: 30px;
+  text-align: right;
+}
+.icon-remove {
+  width: 30px;
+  color: #fc3a5b;
+  text-align: right;
+}
+ion-list {
+  ion-item {
+    border-bottom: 1px solid grey !important;
+  }
+}

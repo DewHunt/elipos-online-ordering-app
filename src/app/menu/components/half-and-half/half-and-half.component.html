@@ -1,0 +1,253 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-left">
+      <p class="deal-title">{{ deal.title }}</p>
+      <p class="final-price">{{ finalPrice | productPrice }}</p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size="6">
+      <ion-button
+        expand="full"
+        color="tertiary"
+        class="half-btn first-half-portion"
+        (click)="firstHalfPortion()"
+      >
+        1/2 (First Portion) (1)
+      </ion-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button
+        expand="full"
+        [color]="firstHalfPortionBtnColor"
+        class="half-btn second-half-portion"
+        disabled="true"
+        (click)="secondHalfPortion()"
+      >
+        1/2 (Second Protion) (1)
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <div [class.ion-hide]="isShowFirstHalfProduct">
+    <div class="header-text">Products For First Portion</div>
+    <ion-row class="item-row">
+      <ion-col size="6" *ngFor="let fhProduct of products" class="item-col">
+        <ion-button
+          expand="full"
+          color="warning"
+          class="item-btn fhp-id-{{ fhProduct.foodItemId }}"
+          (click)="firstHalfProduct(fhProduct)"
+        >
+          {{ fhProduct.foodItemName }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div [class.ion-hide]="isShowSecondHalfProduct">
+    <div class="header-text">Products For Second Portion</div>
+    <ion-row class="item-row">
+      <ion-col size="6" *ngFor="let shProduct of products" class="item-col">
+        <ion-button
+          expand="full"
+          color="warning"
+          class="item-btn shp-id-{{ shProduct.foodItemId }}"
+          (click)="secondHalfProduct(shProduct)"
+        >
+          {{ shProduct.foodItemName }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div [class.ion-hide]="isShowFirstHalfSubProduct">
+    <div class="header-text">Sub-Products For First Portion</div>
+    <ion-row class="item-row">
+      <ion-col
+        size="6"
+        *ngFor="let fhSubproduct of firstHalfSubProducts"
+        class="item-col"
+      >
+        <ion-button
+          expand="full"
+          color="medium"
+          class="item-btn fhsp-id-{{ fhSubproduct.selectiveItemId }}"
+          (click)="firstHalfSubProduct(fhSubproduct)"
+        >
+          {{ fhSubproduct.selectiveItemName }} ({{
+            fhSubproduct.takeawayPrice | productPrice
+          }})
+        </ion-button>
+      </ion-col>
+      <ion-col size="12" class="item-col">
+        <ion-button
+          expand="full"
+          color="danger"
+          class="item-btn"
+          (click)="backToFirstHalfProducts()"
+        >
+          Back To Products
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div [class.ion-hide]="isShowSecondHalfSubProduct">
+    <div class="header-text">Sub-Products For Second Portion</div>
+    <ion-row class="item-row">
+      <ion-col
+        size="6"
+        *ngFor="let shSubproduct of secondHalfSubProducts"
+        class="item-col"
+      >
+        <ion-button
+          expand="full"
+          color="medium"
+          class="item-btn shsp-id-{{
+            shSubproduct.selectiveItemId
+          }} product-size-id-{{ shSubproduct.productSizeId }}"
+          (click)="secondHalfSubProduct(shSubproduct)"
+          [disabled]="
+            shSubproduct.productSizeId !== selectedFirstHalfSubProductSizeId
+          "
+        >
+          {{ shSubproduct.selectiveItemName }} ({{
+            shSubproduct.takeawayPrice | productPrice
+          }})
+        </ion-button>
+      </ion-col>
+      <ion-col size="12" class="item-col">
+        <ion-button
+          expand="full"
+          color="danger"
+          class="item-btn"
+          (click)="backToSecondHalfProducts()"
+        >
+          Back To Products
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div [class.ion-hide]="isShowFirstHalfModifier">
+    <div class="header-text">Modifiers For First Portion</div>
+    <div *ngFor="let fhAssignedModifier of firstHalfAssignedModifiers">
+      <ion-card class="modifier-card">
+        <ion-card-header class="modifier-card-header">
+          <ion-card-subtitle class="ion-text-center modifier-category-title">
+            {{ fhAssignedModifier.ModifierCategoryName }}
+          </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+      <ion-row class="item-row">
+        <ion-col
+          size="6"
+          *ngFor="let fhModifier of fhAssignedModifier.SideDishes"
+          class="item-col"
+        >
+          <ion-item class="option-block" lines="none">
+            <ion-checkbox
+              class="option-checkbox fhmc-id-{{
+                fhModifier.ModifierCategoryId
+              }} fhm-id-{{ fhModifier.SideDishesId }}"
+              slot="start"
+              (ionChange)="
+                selectFirstHalfModifier($event, fhModifier, fhAssignedModifier)
+              "
+            ></ion-checkbox>
+            <ion-label>
+              <p class="option-name">{{ fhModifier.SideDishesName }}</p>
+              <p class="price">{{ fhModifier.UnitPrice | productPrice }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-row class="item-row">
+      <ion-col size="12" class="item-col">
+        <ion-button
+          expand="full"
+          color="danger"
+          class="item-btn"
+          (click)="backToFirstHalfSubProducts()"
+        >
+          Back To Sub-Products
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div [class.ion-hide]="isShowSecondHalfModifier">
+    <div class="header-text">Modifiers For Second Portion</div>
+    <div *ngFor="let shAssignedModifier of secondHalfAssignedModifiers">
+      <ion-card class="modifier-card">
+        <ion-card-header class="modifier-card-header">
+          <ion-card-subtitle class="ion-text-center modifier-category-title">
+            {{ shAssignedModifier.ModifierCategoryName }}
+          </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+      <ion-row class="item-row">
+        <ion-col
+          size="6"
+          *ngFor="let shModifier of shAssignedModifier.SideDishes"
+          class="item-col"
+        >
+          <ion-item class="option-block" lines="none">
+            <ion-checkbox
+              class="option-checkbox shmc-id-{{
+                shModifier.ModifierCategoryId
+              }} shm-id-{{ shModifier.SideDishesId }}"
+              slot="start"
+              (ionChange)="
+                selectSecondHalfModfier($event, shModifier, shAssignedModifier)
+              "
+            ></ion-checkbox>
+            <ion-label>
+              <p class="option-name">{{ shModifier.SideDishesName }}</p>
+              <p class="price">{{ shModifier.UnitPrice | productPrice }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-row class="item-row">
+      <ion-col size="12" class="item-col">
+        <ion-button
+          expand="full"
+          color="danger"
+          class="item-btn"
+          (click)="backToSecondHalfSubProducts()"
+        >
+          Back To Sub-Products
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button expand="full" color="danger" (click)="closeModal()">
+          Close
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button
+          expand="full"
+          class="common-btn"
+          [disabled]="!isSelectedSecondHalfSubProduct"
+          (click)="addHalfDealToCart()"
+        >
+          Confirm
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
